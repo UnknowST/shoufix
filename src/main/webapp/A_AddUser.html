@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<!-- 取色器测试 -->
+	<style>
+		.testcolor {
+			color: aliceblue;
+		}
+
+		.upBox {
+			border: solid #556270;
+			border-radius: 20px;
+			background-color: #dbe6f4;
+			width: 600px;
+		}
+	</style>
+
+	<title>注册界面</title>
+	<script src="Js/jquery-3.3.1.js"></script>
+	<!--添加用户 应该不需要手动帮他设置密码什么的-->
+	<script>
+		function checkpassword1() {
+
+			password1 = $("#password1").val();
+			if (password1 == null || password1 == "") { $("#newpas1").html("*请输入密码！"); return false }
+			else {
+				$("#newpas1").html("");
+				return true;
+			}
+
+		}
+		function checkpassword2() {
+			var password2 = $("#password2").val();
+			var password1 = $("#password1").val();
+			if (password2 == null || password2 == "") {
+				$("#newpas2").html("*请再次输入密码！"); return false;
+			} else {
+				if (password2 == password1) {
+					$("#newpas2").html("");
+					return true
+				}
+				else {
+					$("#newpas2").html("*两次输入的密码不相同！")
+				}
+
+			}
+		}
+		function checksf() {
+			var sf = $('input:radio[id="sf"]:checked').val();
+			if (sf == "" || sf == null) {
+
+				return false;
+			} else {
+				$("#sf1").html("");
+				return true;
+			}
+		}
+		function checkuserid() {
+			var userid = $("#userid").val();
+			if (userid == "" || userid == null) {
+				$("#newid").html("*账号不能为空！");
+				return false;
+			} else {
+				$("#newid").html(" ");
+				return true;
+			}
+		}
+		$(function () {
+			$("#but1").click(function () {
+				if (checkpassword1() && checkpassword2() && checkuserid() && checksf()) {
+					$.ajax({
+						url: 'admin/insertuser',
+						data: { userid: $("#userid").val(), password: $("#password1").val(), sf: $('input:radio[id="sf"]:checked').val() },
+						dataType: 'json',
+						async: false,
+						success: function (message) {
+							if (message.flag == 1) {
+								alert(message.message);
+								window.history.go(0);
+							} else {
+								$("#sp2").html(message.message);
+							}
+						}
+					})
+					return true;
+				}
+				return false;
+			})
+
+			$("#password1").blur(checkpassword1);
+			$("#password2").blur(checkpassword2);
+			$("#userid").blur(checkuserid);
+			$("#sf").blur(checksf)
+		})
+	</script>
+
+</head>
+
+<body>
+	<br><br> <br><br>
+	<center>
+		<div class="upBox">
+			<!-- 第一行 -->
+			<div
+				style="background-color: #556270;height: 70px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+				<div style="float: left;font-weight: bolder;margin-top: 17px;margin-left: 18px;font-size: 30px;">
+					添加用户账号
+				</div>
+			</div>
+			<!-- 第二行 -->
+			<div>
+				<br>
+				<div class="notice">
+					<ul id="ul1">
+						<form class="STYLE5 STYLE6">
+							<center>
+								<table>
+									<tr>
+										<td style="text-align: right;">身份：</td>
+										<td><input type="radio" value="1" name="sf" id="sf">普通用户
+											<input type="radio" value="2" name="sf" id="sf2">维修师傅
+										</td>
+										<td></td>
+									</tr>
+									<tr>
+										<td style="height: 15px;"></td>
+									</tr>
+									<tr>
+										<td style="text-align: right;">账号：</td>
+										<td><input style="width:170px; height:20px" type="text" name="textfield1"
+												id="userid" /></td>
+										<td style="width: 100px;">
+											<span id="newid"
+												style="color: red;font-weight: bolder;font-size: 15px;"></span>
+										</td>
+									</tr>
+									<tr>
+										<td style="height: 15px;"></td>
+									</tr>
+									<tr>
+										<td style="text-align: right;">密码：</td>
+										<td><input style="width:170px; height:20px" type="password" name="textfield2"
+												id="password1" /></td>
+										<td style="width: 100px;"><span id="newpas1"
+												style="color: red;font-weight: bolder;font-size: 15px;"></span></td>
+									</tr>
+									<tr>
+										<td style="height: 15px;"></td>
+									</tr>
+									<tr>
+										<td style="text-align: right;">确认密码：</td>
+										<td><input style="width:170px; height:20px" type="password" name="textfield2"
+												id="password2" /></td>
+										<td style="width: 100px;"><span id="newpas2"
+												style="color: red;font-weight: bolder;font-size: 15px;"></span></td>
+									</tr>
+									<tr>
+										<td style="height: 15px;"></td>
+									</tr>
+									<tr>
+										<td colspan="3">
+											&nbsp;&nbsp;
+											<input style="width:120px; height:30px;font-weight: bolder;font-size: 15px;"
+												name="reset" type="reset" value="重置信息" />
+											<input style="width:120px; height:30px;font-weight: bolder;font-size: 15px;"
+												name="login" type="submit" id="but1" value="确认添加" />
+										</td>
+									</tr>
+								</table>
+							</center>
+						</form>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- .///////////////////////////////////////////. -->
+
+	</center>
+	</div>
+</body>
+
+</html>

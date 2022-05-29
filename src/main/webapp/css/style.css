@@ -1,0 +1,39 @@
+.padtop{
+	    padding-top: 100px;
+}
+.padtoptxt{
+	padding-top: 30px;
+	text-align: center;
+}
+.footer_fixed-bottom{
+  position:fixed;
+  bottom:.52em;
+}
+
+.btn_mini{
+  display:inline-block;
+  padding:0 1.32em;
+  line-height:2.3;
+  font-size:20px;
+}
+.placeholder {
+    margin: 5px;
+    padding: 0 10px;
+    height: 2.3em;
+    line-height: 2.3em;
+    text-align: center;
+}
+.none{display: none}
+#toolbar {
+
+display: flex;
+justify-content: center;
+align-items: center;
+position: fixed;
+max-width: 100%;
+left: 0;
+top:0;  /*置顶*/
+/*bottom: 0px; /*置底*/*/
+margin:auto;
+
+}

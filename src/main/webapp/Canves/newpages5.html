@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <style>
+        .canvasjs-chart-tooltip {
+            pointer-events: auto !important;
+        }
+    </style>
+    <script type="text/javascript" src="../Js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../Js/jquery.canvasjs.min.js"></script>
+    <script src="../Js/BackData.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            /*小区维修统计  */
+            /*小区维修统计  */
+            /*小区维修统计  */
+            /*小区维修统计  */
+            /*小区维修统计  */
+            /*小区维修统计  */
+            /*小区维修统计  */
+            /*小区维修统计  */
+            /*小区维修统计  */
+            var options = {
+                animationEnabled: true,
+                theme: "light2",
+                width: 880,
+                height: 400,
+                backgroundColor: "aliceblue",
+                zoomEnabled: true,
+                title: {
+                    text: "各小区修数量"
+                },
+                axisX: {
+                    valueFormatString: "小区名称",
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                axisY: {
+                    title: "报修数量",
+                    crosshair: {
+                        enabled: true
+                    }
+                },
+
+                toolTip: {
+                    shared: true,
+                    contentFormatter: function (e) {
+                        var content = " ";
+                        for (var i = 0; i < e.entries.length; i++) {
+                            var kai = " ";
+                            var li = " ";
+                            for (var k = 0; k < floordata.length; k++) {
+                                if (floordata[k].floor == e.entries[i].dataPoint.label) {
+                                    kai = '<a  style="color: cornflowerblue;" href = "newpages2.html?num=' + k + '" id="a' + k + '" > 详细信息</a><hr/>'
+                                    for (var j = 0; j < floordata[k].listmap.length; j++) {
+
+                                        li += '' + floordata[k].listmap[j].key +
+                                            ':' + floordata[k].listmap[j].value + '<br/></hr>'
+                                    }
+                                }
+                            }
+                            var wei = '总计:' + e.entries[i].dataPoint.y + ''
+
+                        }
+                        content = kai + li + wei;
+
+                        return content;
+                    }
+                },
+                legend: {
+                    cursor: "pointer",
+                    verticalAlign: "bottom",
+                    horizontalAlign: "left",
+                    dockInsidePlotArea: true,
+
+                },
+                data: [
+                    {
+                        type: "line", //change it to column, spline, line, pie, etc
+                        toolTipContent: null,
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+            var floordata = backfloor();
+            var maxsum = minsum = floordata[0].sum;
+            var maxfloor = minfloor = "";
+            for (var i = 0; i < floordata.length; i++) {
+                if (floordata[i].sum > maxsum) {
+                    maxsum = floordata[i].sum;
+                }
+                if (floordata[i].sum < minsum) {
+                    minsum = floordata[i].sum;
+                }
+            }
+            for (var i = 0; i < floordata.length; i++) {
+                if (floordata[i].sum == maxsum) {
+                    maxfloor += "[" + floordata[i].floor + ":" + floordata[i].sum + ";" + "]";
+                }
+                if (floordata[i].sum == minsum) {
+                    minfloor += "[" + floordata[i].floor + ":" + floordata[i].sum + ";" + "]";
+                }
+                options.data[0].dataPoints.push({ label: floordata[i].floor, y: parseInt(floordata[i].sum) })
+            }
+            document.getElementById("chartContainer0max").innerText = maxfloor;
+            document.getElementById("chartContainer0min").innerText = minfloor;
+            $("#chartContainer0").CanvasJSChart(options);
+            /*下一个图表 设备维修数据图*/
+            /*下一个图表 设备维修数据图*/
+            /*下一个图表 设备维修数据图*/
+            /*下一个图表 设备维修数据图*/
+            /*下一个图表 设备维修数据图*/
+            /*下一个图表 设备维修数据图*/
+            /*下一个图表 设备维修数据图*/
+            /*下一个图表 设备维修数据图*/
+            /*下一个图表 设备维修数据图*/
+            /*下一个图表 设备维修数据图*/
+            var option1 = {
+                animationEnabled: true,
+                theme: "light2",
+                /* 这里是宽高的设置 */
+                width: 880,
+                height: 400,
+                backgroundColor: "aliceblue",
+                zoomEnabled: true,
+                title: {
+                    text: "各设备修数量"
+                },
+                data: [
+                    {
+                        type: "pie", //change it to column, spline, line, pie, etc
+                        startAngle: 45,
+                        showInLegend: "true",
+                        legendText: "{label}",
+                        indexLabel: "{label} ({y})",
+                        yValueFormatString: "#,##0.#" % "",
+
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+
+            /*添加数据*/
+            var equipdata = backequip();
+            var min = max = equipdata[0].value;
+            var sumvalue = 0;
+            var evalsumvalue = 0;
+            var mininfor = "";
+            var maxinfor = "";
+            for (var i = 0; i < equipdata.length; i++) {
+
+                if (equipdata[i].value > max) {
+                    max = equipdata[i].value;
+                }
+                if (equipdata[i].value < min) {
+                    min = equipdata[i].value;
+                }
+
+            }
+
+            for (var i = 0; i < equipdata.length; i++) {
+                if (equipdata[i].value == max) {
+                    maxinfor += "[" + equipdata[i].key + ":" + equipdata[i].value + ";" + "]";
+                }
+                if (equipdata[i].value == min) {
+                    mininfor += "[" + equipdata[i].key + ":" + equipdata[i].value + ";" + "]";
+                }
+                option1.data[0].dataPoints.push({ label: equipdata[i].key, y: parseInt(equipdata[i].value) });
+
+            }
+            document.getElementById("chartContainer1maxnum").innerText = maxinfor;
+            document.getElementById("chartContainer1minnum").innerText = mininfor;
+            $("#chartContainer1").CanvasJSChart(option1);
+
+            /*支出明细统计图*/
+            /*支出明细统计图*/
+            /*支出明细统计图*/
+            /*支出明细统计图*/
+            /*支出明细统计图*/
+            /*支出明细统计图*/
+            /*支出明细统计图*/
+            /*支出明细统计图*/
+            /*支出明细统计图*/
+            /*支出明细统计图*/
+            /*支出明细统计图*/
+            var option2 = {
+                animationEnabled: true,
+                theme: "dark1", //"light1", "dark1", "dark2"
+                /* 这里是宽高的设置 */
+                width: 880,
+                height: 400,
+                backgroundColor: "aliceblue",
+                zoomEnabled: true,
+                title: {
+                    text: "各类维修支出数据",
+                    fontColor: "#000",
+                },
+                axisX: {
+                    title: "维修类型",
+                    titleFontColor: "#000",
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                axisY: {
+                    title: "支出金额(元)",
+                    titleFontColor: "#000",
+                    crosshair: {
+                        enabled: true
+                    }
+                },
+
+                toolTip: {
+                    shared: true,
+                    content: "总计: {y}元",
+                },
+
+                legend: {
+                    cursor: "pointer",
+                    verticalAlign: "bottom",
+                    horizontalAlign: "left",
+                    dockInsidePlotArea: true,
+                },
+                data: [
+                    {
+                        type: "column", //change it to column, spline, line, pie, etc
+                        indexLabel: "{label} ({y}) 元",
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+            /*添加数据*/
+            var expend = equip_expend();
+            var expendmax = expendmin = expend[0].cost;
+            var arrexpendmax = arrexpendmin = "";
+            for (var i = 0; i < expend.length; i++) {
+                if (expend[i].cost > expendmax) expendmax = expend[i].cost;
+                if (expend[i].cost < expendmin) expendmin = expend[i].cost;
+            }
+            for (var i = 0; i < expend.length; i++) {
+                if (expend[i].cost == expendmax) arrexpendmax += "[" + expend[i].eqname + ":" + expend[i].cost + "元" + ";" + "]";
+                if (expend[i].cost == expendmin) arrexpendmin += "[" + expend[i].eqname + ":" + expend[i].cost + "元" + ";" + "]";
+            }
+            document.getElementById("chartContainer2max").innerText = arrexpendmax;
+            document.getElementById("chartContainer2min").innerText = arrexpendmin;
+            for (var i = 0; i < expend.length; i++) {
+                option2.data[0].dataPoints.push({ label: expend[i].eqname, y: parseInt(expend[i].cost) });
+            }
+            $("#chartContainer2").CanvasJSChart(option2);
+
+
+            /*工人评分排行图*/
+            /*工人评分排行图*/
+            /*工人评分排行图*/
+            /*工人评分排行图*/
+            /*工人评分排行图*/
+            /*工人评分排行图*/
+            /*工人评分排行图*/
+            /*工人评分排行图*/
+            /*工人评分排行图*/
+            /*工人评分排行图*/
+            var rank = workerrank();
+
+
+            var option3 = {
+                animationEnabled: true,
+                width: 880,
+                height: 400,
+                backgroundColor: "aliceblue",
+                theme: "light2",
+
+                zoomEnabled: true,
+                title: {
+                    text: "维修师傅评分排行"
+                },
+                axisX: {
+                    title: "姓名",
+                    titleFontColor: "#000",
+                    titleFontSize: 22,
+                    reversed: true,
+                },
+                axisY: {
+                    title: "得分",
+                    titleFontColor: "#000",
+                    titleFontSize: 22,
+
+                    includeZero: true,
+                    //labelFormatter: this.addSymbols
+                },
+                toolTip: {
+                    shared: true,
+                    fontSize: 20,
+                    fontColor: "red",
+                    background: "#f4d5a6",
+                    contentFormatter: function (e) {
+                        var content = " ";
+                        var li = " ";
+                        var workernummax = workernummin = rank[0].sum_eval;
+                        var workernummaxinfor = workernummininfor = "";
+
+                        for (var k = 0; k < rank.length; k++) {
+                            if (rank[k].sum_eval > workernummax) workernummax = rank[k].sum_eval;
+                            if (rank[k].sum_eval < workernummin) workernummin = rank[k].sum_eval;
+                        }
+                        for (var k = 0; k < rank.length; k++) {
+                            if (rank[k].sum_eval == workernummax) workernummaxinfor += "[" + "工号：" + rank[k].userid + "," + "姓名：" + rank[k].name + "，" + "总分：" + rank[k].sum_eval + "]";
+                            if (rank[k].sum_eval == workernummin) workernummininfor += "[" + "工号：" + rank[k].userid + "," + "姓名：" + rank[k].name + "，" + "总分：" + rank[k].sum_eval + "]";
+                        }
+                        document.getElementById("chartContainer3max").innerText = workernummaxinfor;
+                        document.getElementById("chartContainer3min").innerText = workernummininfor;
+                        for (var i = 0; i < e.entries.length; i++) {
+                            var li = " ";
+                            for (var k = 0; k < rank.length; k++) {
+                                if ((rank[k].num - 1) == e.entries[i].dataPoint.x) {
+
+
+                                    li = '工号:' + rank[k].userid +
+                                        ' 姓名:' + rank[k].name + ' 总分:' + rank[k].sum_eval + ''
+                                }
+                            }
+                        }
+                        content = li;
+                        return content;
+                    }
+
+
+                },
+
+                data: [
+                    {
+                        type: "bar", //change it to column, spline, line, pie, etc
+                        toolTipContent: null,
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+
+
+
+            var rank = workerrank();
+
+            for (var i = 0; i < rank.length; i++) {
+                option3.data[0].dataPoints.push({ label: rank[i].name, y: parseFloat(rank[i].sum_eval) });
+            }
+
+            $("#chartContainer3").CanvasJSChart(option3);
+            /* 用户申报次数表 */
+            /* 用户申报次数表 */
+            /* 用户申报次数表 */
+            /* 用户申报次数表 */
+            /* 用户申报次数表 */
+            /* 用户申报次数表 */
+            /* 用户申报次数表 */
+            /* 用户申报次数表 */
+            /* 用户申报次数表 */
+            /* 用户申报次数表 */
+            /* 用户申报次数表 */
+
+
+
+
+            var option4 = {
+                animationEnabled: true,
+                width: 880,
+                height: 400,
+                backgroundColor: "aliceblue",
+                theme: "light2",
+
+                zoomEnabled: true,
+                title: {
+                    text: "用户申报次数表"
+                },
+                axisX: {
+                    title: "账号",
+                    titleFontColor: "#000",
+                    titleFontSize: 22,
+                    reversed: true,
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                axisY: {
+                    title: "数量/次",
+                    titleFontColor: "#000",
+                    titleFontSize: 22,
+
+                    includeZero: true,
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                toolTip: {
+                    shared: true,
+                },
+
+                data: [
+                    {
+                        type: "column", //change it to column, spline, line, pie, etc
+                        name: "数量",
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+            /*添加数据*/
+            var rank1 = usernum();
+            var maxusernum = minusernum = rank1[0].num;
+            var maxusernuminfor = minusernuminfor = "";
+            for (var i = 0; i < rank1.length; i++) {
+                if (rank1[i].num > maxusernum) maxusernum = rank1[i].num;
+                if (rank1[i].num < minusernum) minusernum = rank1[i].num;
+            }
+            for (var i = 0; i < rank1.length; i++) {
+                if (rank1[i].num == maxusernum) maxusernuminfor += "[" + "账号：" + rank1[i].userid + "，" + "次数：" + rank1[i].num + ";" + "]";
+                if (rank1[i].num == minusernum) minusernuminfor += "[" + rank1[i].userid + ":" + rank1[i].num + ";" + "]";
+                option4.data[0].dataPoints.push({ label: rank1[i].userid, y: parseFloat(rank1[i].num) });
+            }
+            document.getElementById("chartContainer4max").innerText = maxusernuminfor;
+            $("#chartContainer4").CanvasJSChart(option4);
+
+
+
+            /*师傅维修单数 和平均时间图表*/
+            /*师傅维修单数 和平均时间图表*/
+            /*师傅维修单数 和平均时间图表*/
+            /*师傅维修单数 和平均时间图表*/
+            /*师傅维修单数 和平均时间图表*/
+            /*师傅维修单数 和平均时间图表*/
+            /*师傅维修单数 和平均时间图表*/
+            /*  */
+            var option5 = {
+                animationEnabled: true,
+                width: 880,
+                height: 400,
+                backgroundColor: "aliceblue",
+                theme: "light2",
+
+                zoomEnabled: true,
+                title: {
+                    text: "维修单数和平均时间"
+                },
+                axisX: {
+                    title: "账号",
+                    titleFontColor: "#000",
+                    titleFontSize: 22,
+                    reversed: true,
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                axisY: {
+                    title: "数量/次",
+                    titleFontColor: "#000",
+                    titleFontSize: 22,
+
+                    includeZero: true,
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                toolTip: {
+                    shared: true,
+                    fontSize: 20,
+                    fontColor: "red",
+                    background: "#f4d5a6",
+
+
+
+                },
+
+                data: [
+                    {
+                        type: "line", //change it to column, spline, line, pie, etc
+
+                        showInLegend: true,
+                        name: "数量",
+                        markerType: "square",
+                        dataPoints: [
+
+                        ]
+                    },
+                    {
+                        type: "line", //change it to column, spline, line, pie, etc
+
+                        showInLegend: true,
+                        name: "平均用时/h",
+                        lineDashType: "dash",
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+            /*添加数据*/
+            var rank2 = worker_num();
+
+            for (var i = 0; i < rank2.length; i++) {
+                option5.data[0].dataPoints.push({ label: rank2[i].workerid, y: parseFloat(rank2[i].num) });
+            }
+            for (var i = 0; i < rank2.length; i++) {
+                option5.data[1].dataPoints.push({ label: rank2[i].workerid, y: parseFloat(rank2[i].tm) });
+            }
+
+            $("#chartContainer5").CanvasJSChart(option5);
+
+
+
+        });
+
+
+        /* END */
+        /* END */
+        /* END */
+        /* END */
+        /* END */
+        /* END */
+        /* END */
+
+        function showdiv(num) {
+            for (var i = 0; i <= 6; i++) {
+                if (num == i) {
+                    document.getElementById("div" + i).style.display = "block";
+                    document.getElementById("chartContainer" + i).style.display = "block";
+                    document.getElementById("a" + i).classList = "bntup";
+                }
+                else {
+                    document.getElementById("div" + i).style.display = "none";
+                    document.getElementById("chartContainer" + i).style.display = "none";
+                    document.getElementById("a" + i).classList = "bntdown";
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript">
+
+        $(function () {
+            var ename = [];
+            var myDate = new Date;
+            var mont = myDate.getMonth() + 1;
+
+            var equip_live = getequip_live();
+
+            for (var i = 0; i < equip_live.length - 1; i++) {
+                var flag = false;
+                for (var j = i + 1; j < equip_live.length; j++) {
+                    if (equip_live[i].equip == equip_live[j].equip) flag = true;
+                }
+                if (flag == false) ename.push(equip_live[i].equip);
+            }
+            var li = ' ';
+            for (var i = 0; i < ename.length; i++) {
+                li += '<option value="' + ename[i] + '">' + ename[i] + '</option>'
+            }
+
+            $('#equip').append(li);
+            var text = $('#equip option:selected').val();
+
+
+            var options = {
+
+                animationEnabled: true,
+                theme: "light2",
+                width: 880,
+                height: 400,
+                backgroundColor: "aliceblue",
+                zoomEnabled: true,
+                title: {
+                    text: '',
+                },
+                axisX: {
+                    title: "月份",
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    },
+                    minimum: 1,
+                    maximum: 0,
+                    interval: 1,
+
+                },
+                axisY: {
+                    title: "存活时间/天",
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    },
+                },
+
+                toolTip: {
+                    enabled: true,       //disable here
+                    animationEnabled: true //disable here
+
+                },
+                legend: {
+                    cursor: "pointer",
+                    verticalAlign: "bottom",
+                    horizontalAlign: "left",
+                    dockInsidePlotArea: true,
+
+                },
+                data: [
+                    {
+                        type: "line", //change it to column, spline, line, pie, etc
+                        toolTipContent: null,
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+
+            for (var i = 0; i < equip_live.length; i++) {
+                if (equip_live[i].equip == text) {
+                    options.data[0].dataPoints.push({ x: parseInt(equip_live[i].mon), y: parseInt(30 / equip_live[i].num) })
+                }
+            }
+            options.title.text = text + '每月平均存活时间';
+            options.axisX.maximum = mont;
+            $("#chartContainer6").CanvasJSChart(options);
+
+
+            $("#equip").change(function () {
+                var text = $("#equip option:selected").val();
+                var myDate = new Date;
+                var mont = myDate.getMonth() + 1;
+
+                var options1 = {
+
+                    animationEnabled: true,
+                    theme: "light2",
+                    width: 880,
+                    height: 400,
+                    backgroundColor: "aliceblue",
+                    zoomEnabled: true,
+                    title: {
+                        text: '',
+                    },
+                    axisX: {
+                        title: "月份",
+                        crosshair: {
+                            enabled: true,
+                            snapToDataPoint: true
+                        },
+                        minimum: 1,
+                        maximum: 0,
+                        interval: 1,
+
+                    },
+                    axisY: {
+                        title: "存活时间/天",
+                        crosshair: {
+                            enabled: true,
+                            snapToDataPoint: true
+                        },
+                    },
+
+                    toolTip: {
+                        enabled: true,       //disable here
+                        animationEnabled: true //disable here
+                    },
+                    legend: {
+                        cursor: "pointer",
+                        verticalAlign: "bottom",
+                        horizontalAlign: "left",
+                        dockInsidePlotArea: true,
+
+                    },
+                    data: [
+                        {
+                            type: "line", //change it to column, spline, line, pie, etc
+                            toolTipContent: null,
+                            dataPoints: [
+
+                            ]
+                        }
+                    ]
+                };
+
+                for (var i = 0; i < equip_live.length; i++) {
+                    if (equip_live[i].equip == text) {
+                        options1.data[0].dataPoints.push({ x: parseInt(equip_live[i].mon), y: parseInt(30 / equip_live[i].num) })
+                    }
+                }
+                options1.title.text = text + '每月平均存活时间';
+                options1.axisX.maximum = mont;
+
+                $("#chartContainer6").CanvasJSChart(options1);
+
+            })
+        })
+
+
+
+    </script>
+    <style>
+        .a {
+            font-weight: border;
+            font-size: 15px;
+            /*  CCCCFF*/
+            background-color: #CCCCFF;
+            border-radius: 15px;
+            text-decoration: none;
+        }
+
+        .div {
+            width: 90%;
+            height: 500px;
+            border-radius: 20%;
+        }
+
+        .topdiv {
+            height: auto;
+            display: none;
+        }
+
+        .sendiv {
+            display: none;
+            height: 400px;
+        }
+
+        img {
+            width: 20px;
+        }
+    </style>
+    <style>
+        .bntup {
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: inline-block;
+            padding: 10px 32px;
+            border-radius: 50px;
+            transition: 0.5s;
+            margin: 0 20px 20px 0;
+            background-color: #4a8bfe;
+            color: aliceblue;
+            text-decoration: none;
+        }
+
+        .bntdown {
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: inline-block;
+            padding: 10px 32px;
+            border-radius: 50px;
+            transition: 0.5s;
+            margin: 0 20px 20px 0;
+            border: #4a8bfe 2px solid;
+            color: #4a8bfe;
+            text-decoration: none;
+        }
+
+        iframe {
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <center>
+        <a id="a0" class="bntup" href="javascript:showdiv(0)">各小区维修数量</a>
+        <a id="a1" class="bntdown" href="javascript:showdiv(1)">各设备维修数量</a>
+        <a id="a2" class="bntdown" href="javascript:showdiv(2)">维修支出一览表</a>
+        <a id="a3" class="bntdown" href="javascript:showdiv(3)">师傅评分情况</a>
+        <a id="a4" class="bntdown" href="javascript:showdiv(4)">用户申报次数</a>
+        <a id="a5" class="bntdown" href="javascript:showdiv(5)">师傅单数与平均用时</a>
+        <a id="a6" class="bntdown" href="javascript:showdiv(6)">相关系数分析</a>
+    </center><br><br>
+    <div id="div0" class="topdiv" style="display: block;">
+        <div id="chartContainer0" class="sendiv" style="display: block;"></div>
+        <br><br><strong>楼层预警：</strong><br><br>
+        <img src="../img/red预警.png" alt=""><strong style="color: red;">预警楼层</strong>
+            <span id="chartContainer0max"></span><br><br>
+        <img src="../img/blue预警.png" alt=""><strong style="color: blue;">安全楼层</strong>
+            <span id="chartContainer0min"></span><br><br>
+            <br><br><strong>温馨提示：</strong><br><br>
+            应加强预警楼层的隐患排查，谨防出现安全事故！<br>
+            同时，保持安全楼层的“健康状态”，不可放轻松。
+       
+    </div>
+
+    <div id="div1" class="topdiv">
+        <div id="chartContainer1" class="sendiv" style="display: none;"></div>
+        <div id="workername" style="float: left;">
+
+            <p style="font-size: 20px;font-weight: bolder;">维修数量预警：</p>
+            <strong>维修数量最多的设备：</strong><span id="chartContainer1maxnum"></span>&nbsp;&nbsp;&nbsp;<br><br>
+            <strong>维修数量最少的设备：</strong><span id="chartContainer1minnum"></span>&nbsp;&nbsp;&nbsp;<br><br>
+            <p style="font-size: 20px;font-weight: bolder;">温馨提示：</p>
+            可根据以上的统计结果，适当管控支出金额。
+        </div>
+    </div>
+
+    <div id="div2" class="topdiv">
+        <div id="chartContainer2" class="sendiv" style="display: none;"></div>
+        <div id="workername" style="float: left;">
+
+            <p style="font-size: 20px;font-weight: bolder;">维修支出预警：</p>
+            <strong>支出最多的设备：</strong><span id="chartContainer2max"></span>&nbsp;&nbsp;&nbsp;<br><br>
+            <strong>支出最少的设备：</strong><span id="chartContainer2min"></span>&nbsp;&nbsp;&nbsp;<br><br>
+            <p style="font-size: 20px;font-weight: bolder;">温馨提示：</p>
+            可根据以上的统计数据，适当调正设备采购数量。
+        </div>
+    </div>
+
+    <div id="div3" class="topdiv">
+        <div id="chartContainer3" class="sendiv" style="display: none;"></div>
+        <div id="workername" style="float: left;">
+
+            <p style="font-size: 20px;font-weight: bolder;">维修数量分析：</p>
+            <strong>得分最高的师傅：</strong><span id="chartContainer3max"></span>&nbsp;&nbsp;&nbsp;<br><br>
+            <strong>得分最低的师傅：</strong><span id="chartContainer3min"></span>&nbsp;&nbsp;&nbsp;<br><br>
+            <p style="font-size: 20px;font-weight: bolder;">维修数量分析：</p>
+            根据以上分析结果，可进行适当的赏罚。
+        </div>
+    </div>
+
+    <div id="div4" class="topdiv">
+        <div id="chartContainer4" class="sendiv" style="display: none;"></div>
+        <div id="workername" style="float: left;">
+
+            <p style="font-size: 20px;font-weight: bolder;">维修数量分析：</p>
+            <strong>申报次数最多的用户：</strong><span id="chartContainer4max"></span>,可适当给予奖励。
+        </div>
+
+    </div>
+
+    <div id="div5" class="topdiv">
+        <div id="chartContainer5" class="sendiv" style="display: none;"></div>
+
+    </div>
+    <div id="div6" class="topdiv">
+        <div>
+            <select id="equip"></select>
+        </div>
+
+        <div id="chartContainer6" class="sendiv" style="display: none;">
+        </div>
+
+    </div>
+</body>
+
+</html>

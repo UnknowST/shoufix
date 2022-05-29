@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>equip_live</title>
+    <style>
+        .canvasjs-chart-tooltip {
+            pointer-events: auto !important;
+        }
+    </style>
+    <script type="text/javascript" src="../Js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../Js/jquery.canvasjs.min.js"></script>
+    <script src="../Js/BackData.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            var ename=[];
+            var myDate = new Date;
+            var mont=myDate.getMonth()+1;
+
+            var equip_live = getequip_live();
+
+            for(var i=0;i<equip_live.length-1;i++)
+            {
+                var flag=false;
+                for(var j=i+1;j<equip_live.length;j++){
+                    if(equip_live[i].equip==equip_live[j].equip) flag=true;
+                }
+                if (flag==false) ename.push(equip_live[i].equip);
+            }
+            var li=' ';
+            for(var i=0;i<ename.length;i++){
+                li+='<option value="'+ename[i]+'">'+ename[i]+'</option>'
+            }
+
+            $('#equip').append(li);
+            var text=$('#equip option:selected').val();
+            var options = {
+
+                animationEnabled: true,
+                theme: "light2",
+                width: 880,
+                height: 400,
+                backgroundColor: "aliceblue",
+                zoomEnabled: true,
+                title: {
+                    text:'',
+                },
+                axisX: {
+                    title: "月份",
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    },
+                    minimum:1,
+                    maximum:0,
+                    interval: 1,
+
+                },
+                axisY: {
+                    title: "存活时间/天",
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    },
+                },
+
+                toolTip: {
+                    enabled: true,       //disable here
+                    animationEnabled: true //disable here
+
+                },
+                legend: {
+                    cursor: "pointer",
+                    verticalAlign: "bottom",
+                    horizontalAlign: "left",
+                    dockInsidePlotArea: true,
+
+                },
+                data: [
+                    {
+                        type: "line", //change it to column, spline, line, pie, etc
+                        toolTipContent: null,
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+
+            for (var i = 0; i < equip_live.length; i++) {
+                if(equip_live[i].equip==text){
+                    options.data[0].dataPoints.push({ x: parseInt(equip_live[i].mon), y: parseInt(30/equip_live[i].num) })
+                }
+            }
+            options.title.text=text+'每月平均存活时间';
+            options.axisX.maximum=mont;
+            $("#chartContainer0").CanvasJSChart(options);
+
+
+            $("#equip").change(function () {
+                var text=$("#equip option:selected").val();
+                var myDate = new Date;
+                var mont=myDate.getMonth()+1;
+
+                var options1 = {
+
+                    animationEnabled: true,
+                    theme: "light2",
+                    width: 880,
+                    height: 400,
+                    backgroundColor: "aliceblue",
+                    zoomEnabled: true,
+                    title: {
+                        text:'',
+                    },
+                    axisX: {
+                        title: "月份",
+                        crosshair: {
+                            enabled: true,
+                            snapToDataPoint: true
+                        },
+                        minimum:1,
+                        maximum:0,
+                        interval: 1,
+
+                    },
+                    axisY: {
+                        title: "存活时间/天",
+                        crosshair: {
+                            enabled: true,
+                            snapToDataPoint: true
+                        },
+                    },
+
+                    toolTip: {
+                        enabled: true,       //disable here
+                        animationEnabled: true //disable here
+                    },
+                    legend: {
+                        cursor: "pointer",
+                        verticalAlign: "bottom",
+                        horizontalAlign: "left",
+                        dockInsidePlotArea: true,
+
+                    },
+                    data: [
+                        {
+                            type: "line", //change it to column, spline, line, pie, etc
+                            toolTipContent: null,
+                            dataPoints: [
+
+                            ]
+                        }
+                    ]
+                };
+
+                for (var i = 0; i < equip_live.length; i++) {
+                    if(equip_live[i].equip==text){
+                        options1.data[0].dataPoints.push({ x: parseInt(equip_live[i].mon), y: parseInt(30/equip_live[i].num) })
+                    }
+                }
+                options1.title.text=text+'每月平均存活时间';
+                options1.axisX.maximum=mont;
+
+                $("#chartContainer0").CanvasJSChart(options1);
+
+            })
+        })
+
+
+        
+    </script>
+</head>
+<body>
+<div><select id="equip"></select></div>
+<div id="chartContainer0" class="sendiv" style="display: block;"></div>
+</body>
+</html>

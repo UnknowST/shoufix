@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: ghostwhite;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>使用说明</title>
+  <style>
+    body {
+      background-color: #f2f2f2;
+    }
+
+    .upBox {
+      border: solid #cfdef3;
+      border-radius: 20px;
+      background-color: #F0FFFF;
+      width: 600px;
+    }
+  </style>
+  <script>
+    function showpage(li) {
+      if (li == li1) {
+        document.getElementById("li1").style.display = "block";
+        document.getElementById("li2").style.display = "none";
+        document.getElementById("li3").style.display = "none";
+      }
+      if (li == li2) {
+        document.getElementById("li2").style.display = "block";
+        document.getElementById("li1").style.display = "none";
+        document.getElementById("li3").style.display = "none";
+      }
+      if (li == li3) {
+        document.getElementById("li3").style.display = "block";
+        document.getElementById("li2").style.display = "none";
+        document.getElementById("li1").style.display = "none";
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <br><br><br><br>
+  <center>
+    <div style="border: black solid;width: 800px;">
+      <div style="height: 40px;width: 800px;background-color: black;">
+        <a style="color: #f2f2f2;float: left;">使用说明</a>
+      </div>
+      <div style="min-height:500px;height:auto;width: 800px;">
+        <div style="margin-left: 50px;margin-top: 50px;">
+
+          <table style="width: 100%;">
+
+            <tr>
+              <td style="width: 100px;"><a href="javascript:showpage(li1)">知识产权声明</a></li>
+              </td>
+              <td style="text-align: left;width: 400px;" rowspan="9">
+                <div style="width: 100%;height: 500px;" id="Box">
+
+                  <div style="display: block;float: left;" id="li1">
+                    <!-- 
+                      产权保护
+                     -->
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    本网站由小组团队共同开发，具有网站的所有权，任何人不得侵犯。
+                    同时，本网站享有知识产权保护，请勿将本网站作为任何商业性目的用途。
+                    为了更好的维护平台的运营与发展，本网站允许通过引用、链接等方式，进行非商业性的使用。但请得到作者许可，或者注明出处。
+                  </div>
+
+                  <div style="display: none;" id="li2">
+                    <!-- 隐私声明 -->
+
+                    对于用户的隐私保护，本网站郑重承诺：<br><br>
+                    <strong>
+                      <li>1.不泄露用户的任何个人信息。</li>
+                      <li>2.不将用户的个人信息作为商业用途。</li>
+                      <li>3.不采集一级隐私信息。</li>
+                    </strong><br>
+                    为了更好的服务于各位用户，加强对用户的隐私保护，
+                    您若有更好的想法，还望通过【<a href="feedback.html">反馈中心</a>】告诉我们。
+
+                  </div>
+
+                  <div style="display: none;" id="li3">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    本网站声明：<br><br>
+                    <strong>
+                      <li>1.建议使用虚拟个人信息，因用户的过失造成的信息泄露，本网站概不负责。</li>
+                      <li>2.在申报时提交错误信息造成的个人经济损失，本网站概不负责。</li>
+                      <li>3.注册即视为同意网站条款，请遵守本网站协议。</li>
+                    </strong>
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+            <tr>
+              <td><a href="javascript:showpage(li2)">隐私保护声明</a></li>
+              </td>
+            </tr>
+            <tr>
+              <td><a href="javascript:showpage(li3)">免责声明</a></li>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td style="height: 100px;"></td>
+            </tr>
+            <tr>
+              <td style="height: 100px;"></td>
+            </tr>
+            <tr>
+              <td style="height: 100px;"></td>
+            </tr>
+            <tr>
+              <td style="height: 100px;"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </center>
+  <!-- ///// -->
+</body>
+
+</html>

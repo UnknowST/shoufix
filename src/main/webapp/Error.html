@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>维护公告</title>
+	<style>
+		.divnotice {
+			margin-left: 500px;
+			width: 500px;
+			height: 380px;
+		}
+
+		div,
+		ul,
+		li {
+			margin: 0;
+			padding: 0
+		}
+
+		/*先初始化一下默认样式*/
+		.notice {
+
+			/*padding-left: 750px;
+				padding-top: -100px;*/
+			width: 500px;
+			/*单行显示，超出隐藏*/
+			height: 250px;
+			/*固定公告栏显示区域的高度*/
+			/*padding: 0 30px;*/
+			/*background-color: #b3effe;*/
+			overflow: hidden;
+
+		}
+
+		.notice ul li {
+			font-size: 30px;
+			list-style: none;
+			line-height: 40px;
+			/*以下为了单行显示，超出隐藏*/
+			display: block;
+			/*//white-space: nowrap;*/
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: normal;
+			word-break: break-all;
+			word-wrap: break-word;
+		}
+	</style>
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+	<script src="noticeUp.js"></script>
+
+
+	<style>
+		button {
+			font-size: 25px;
+			font-weight: 400;
+			background: darkgray;
+			width: 130px;
+			margin-left: 10px;
+		}
+
+		#logo {
+
+			float: left;
+
+		}
+
+		#imglogo {
+			width: 400px;
+			height: 400px;
+		}
+
+		#buttonbody {
+			float: left;
+			font-size: 25px;
+			font-weight: 400;
+			width: 450px;
+		}
+	</style>
+</head>
+
+<body>
+	<p align="center" style="font-size:35px;font-weight:800;"> 上 海 海 洋 大 学 校 园 维 修 系 统</p><br />
+	<!-- logo图形框 -->
+	<div style="width: 900px;height: 500px;background-color: black;margin:0 auto;margin-top: 20px;background-color: #CCFFFF;"
+		align="center">
+		<div id="logo">
+			<img id="imglogo" src="img/logo.png" />
+		</div>
+		<!-- 公告栏 -->
+		<div class="divnotice" style="border: solid  #66CCCC;border-radius: 20px;background-color: #CCFFFF;">
+
+			<!-- 第一行 -->
+			<div
+				style="background-color: #66CCCC;height: 70px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+				<div style="float: left;font-weight: bolder;margin-top: 17px;margin-left: 180px;font-size: 30px;">
+					维护公告
+				</div>
+				<img src="img/error.png" style="float: right;width: 65px;height: 65px;">
+			</div>
+
+
+
+			<!-- 第二行 -->
+			<div>
+				<br>
+				<div class="notice">
+					<br><br><br>
+					<label style="text-decoration: solid;">
+						<strong>
+							<h1>我们的程序猿正在进行系统维护....</h1>
+						</strong>
+					</label>
+					<div style="float: right;">
+						给您带来不便，敬请谅解！
+					</div>
+					<img src="img/error.gif" style="width: 200px;">
+				</div>
+			</div>
+
+
+
+
+		</div>
+		<!-- 功能框 -->
+
+	</div>
+	<div style="clear:both;">
+		<br><br><br>
+		<p style="margin-top: 5px;width: 100%;height:auto; background-color: #66CCCC ;" align="center">
+
+			<a href="#">功能反馈</a>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="About.html">系统简介</a>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="author.html">联系作者</a>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a>版本号：SN.12.02.101.02</a>
+
+		</p>
+	</div>
+</body>
+
+</html>

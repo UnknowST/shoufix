@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.WechatApp">
+    <!--自动返回主键-->
+    <insert id="submitinfor" parameterType="infor">
+        insert into infor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid!=null and userid!=''">
+                userid,
+            </if>
+            <if test="floor!=null and floor!=''">
+                floor,
+            </if>
+            <if test="layer!=null and layer!=''">
+                layer,
+            </if>
+            <if test="h_number!=null and h_number!=''">
+                h_number,
+            </if>
+            <if test="equip!=null and equip!=''">
+                equip,
+            </if>
+            <if test="reason!=null and reason!=''">
+                reason,
+            </if>
+            <if test="detail!=null and detail!=''">
+                detail,
+            </if>
+            <if test="imagepath1!=null and imagepath1!=''">
+                imagepath1,
+            </if>
+            <if test="imagepath2!=null and imagepath2!=''">
+                imagepath2,
+            </if>
+            <if test="imagepath3!=null and imagepath3!=''">
+                imagepath3,
+            </if>
+            <if test="imagepath4!=null and imagepath4!=''">
+                imagepath4,
+            </if>
+            <if test="imagepath5!=null and imagepath5!=''">
+                imagepath5,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid!=null and userid!=''">
+                #{userid},
+            </if>
+            <if test="floor!=null and floor!=''">
+                #{floor},
+            </if>
+            <if test="layer!=null and layer!=''">
+                #{layer},
+            </if>
+            <if test="h_number!=null and h_number!=''">
+                #{h_number},
+            </if>
+            <if test="equip!=null and equip!=''">
+                #{equip},
+            </if>
+            <if test="reason!=null and reason!=''">
+                #{reason},
+            </if>
+            <if test="detail!=null and detail!=''">
+                #{detail},
+            </if>
+            <if test="imagepath1!=null and imagepath1!=''">
+                #{imagepath1},
+            </if>
+            <if test="imagepath2!=null and imagepath2!=''">
+                #{imagepath2},
+            </if>
+            <if test="imagepath3!=null and imagepath3!=''">
+                #{imagepath3},
+            </if>
+            <if test="imagepath4!=null and imagepath4!=''">
+                #{imagepath4},
+            </if>
+            <if test="imagepath5!=null and imagepath5!=''">
+                #{imagepath5},
+            </if>
+        </trim>
+
+        <selectKey keyProperty="num" resultType="int">
+            select LAST_INSERT_ID() as num
+        </selectKey>
+    </insert>
+
+    <insert id="creatreplay" parameterType="int">
+        insert into replay(inforid) values (#{inforid})
+    </insert>
+
+    <select id="back_workerid" resultType="string">
+        SELECT  userid FROM
+        (
+        SELECT * FROM
+        (
+        SELECT b.userid,COUNT(i.workerid) AS snum FROM infor i RIGHT JOIN worker  b
+
+        ON i.workerid =b.userid  AND i.state="正在维修" GROUP BY b.userid  ) AS temp WHERE userid IN(
+
+        SELECT userid FROM  worker  WHERE type_worker =(
+        SELECT w.num FROM type_equip t,type_worker w WHERE t.`type`=w.`num` AND t.equip="水龙头") AND workstate="Y"  )
+        ORDER BY snum ASC )  AS temp1 LIMIT 1
+    </select>
+    <update id="fenpeiinfor" parameterType="string">
+        update infor set workerid=#{arg1} , state="正在维修",distribute_time=NOW() where num=#{arg0}
+    </update>
+    <select id="equipmentlist" resultType="equipment">
+        select * from equipment
+    </select>
+</mapper>

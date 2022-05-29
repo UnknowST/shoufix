@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.mapper.Adminmapper">
+
+    <resultMap id="inforMap" type="infor">
+        <result column="inum" property="num"></result>
+        <result column="userid" property="userid"></result>
+        <result column="place" property="place"></result>
+        <result column="equip" property="equip"></result>
+        <result column="detail" property="detail"></result>
+        <result column="ad_replay" property="ad_replay"></result>
+        <result column="reason" property="reason"></result>
+        <result column="floor" property="floor"></result>
+        <result column="layer" property="layer"></result>
+        <result column="h_number" property="h_number"></result>
+        <result column="distribute_time" property="distribute_time"></result>
+        <result column="complete_time" property="complete_time"></result>
+        <result column="imagepath1" property="imagepath1"></result>
+        <result column="imagepath2" property="imagepath2"></result>
+        <result column="imagepath3" property="imagepath3"></result>
+        <result column="imagepath4" property="imagepath4"></result>
+        <result column="imagepath5" property="imagepath5"></result>
+        <result column="evaluate" property="evaluate"></result>
+        <result column="workerid" property="workerid"></result>
+        <result column="state" property="state"></result>
+        <result column="comment" property="comment"></result>
+        <result column="icreatedate" property="createdate"></result>
+        <collection property="replay" ofType="replay">
+            <result column="rnum" property="num"></result>
+            <result column="inforid" property="inforid"></result>
+            <result column="workerid" property="workerid"></result>
+            <result column="rdetail" property="detail"></result>
+            <result column="eid" property="eid"></result>
+            <result column="numbers" property="numbers"></result>
+            <result column="rcreatedate" property="createdate"></result>
+        </collection>
+    </resultMap>
+
+    <select id="listOf" resultMap="inforMap">
+        SELECT *,i.num inum,r.num rnum ,i.createdate icreatedate,r.createdate rcreatedate,i.detail idetail,r.detail rdetail
+        FROM infor i,replay r WHERE  i.num=r.inforid
+    </select>
+
+    <select id="listworker" resultType="worker">
+        select * from worker
+    </select>
+
+    <select id="typeList" resultType="worker_type">
+        select * from type_worker
+    </select>
+
+    <select id="daiinfor" resultMap="inforMap">
+        /*按时间升序查询*/
+                  SELECT *,i.num inum,r.num rnum ,i.createdate icreatedate,r.createdate rcreatedate,i.detail idetail,r.detail rdetail
+        FROM infor i,replay r WHERE i.state="待分配" and i.num=r.inforid ORDER BY i.createdate ASC
+    </select>
+
+    <select id="waitinfor" resultMap="inforMap">
+                SELECT *,i.num inum,r.num rnum ,i.createdate icreatedate,r.createdate rcreatedate,i.detail idetail,r.detail rdetail
+        FROM infor i,replay r WHERE i.state="待维修" and i.num=r.inforid ORDER BY i.createdate ASC
+    </select>
+
+    <select id="inginfor" resultMap="inforMap">
+                SELECT *,i.num inum,r.num rnum ,i.createdate icreatedate,r.createdate rcreatedate,i.detail idetail,r.detail rdetail
+        FROM infor i,replay r WHERE i.state="正在维修" and i.num=r.inforid ORDER BY i.createdate ASC
+    </select>
+
+    <select id="succinfor" resultMap="inforMap">
+                        SELECT *,i.num inum,r.num rnum ,i.createdate icreatedate,r.createdate rcreatedate,i.detail idetail,r.detail rdetail
+        FROM infor i,replay r WHERE  i.num=r.inforid AND i.state IN ("维修成功" ,"维修失败") ORDER BY i.createdate ASC
+    </select>
+
+
+    <select id="suminfor" resultType="int" parameterType="string">
+      SELECT COUNT(workerid) FROM infor WHERE workerid=#{workerid} AND state="待维修"
+    </select>
+
+    <update id="uiworker" parameterType="string">
+        update infor set workerid=#{param2}, state="待维修" where num=#{param1}
+    </update>
+
+    <select id="userlist" resultType="user">
+        select * from user
+    </select>
+
+    <delete id="deleteuser" parameterType="string">
+        delete from user where num=#{num}
+    </delete>
+
+    <update id="resetpassword" parameterType="string">
+        update user set password="111111" where num=#{num}
+    </update>
+
+    <select id="searchuser" parameterType="user" resultType="user">
+        select * from user
+        <where>
+            <if test="userid!=null and userid!=''">
+                and userid=#{userid}
+            </if>
+            <if test="collage!=null and collage!= ''">
+                and collage=#{collage}
+            </if>
+            <if test="phone!=null and phone!=''">
+                and phone=#{phone}
+            </if>
+        </where>
+    </select>
+
+    <select id="billlist" resultType="bill">
+        select * from bill
+    </select>
+    <delete id="deletebill" parameterType="string">
+        delete from bill where snum=#{snum}
+    </delete>
+    <update id="updatebill" parameterType="bill">
+        update bill set place=#{place} ,useing=#{useing} , cost=#{cost} where snum=#{snum}
+    </update>
+    <insert id="InsertUser" parameterType="user">
+        insert into user(userid,password) values(#{userid},#{password});
+    </insert>
+    <insert id="InsertWorker" parameterType="worker">
+        insert into worker(userid,password) values(#{userid},#{password});
+    </insert>
+
+    <delete id="deleteworker" parameterType="string">
+        delete from worker where num=#{num}
+    </delete>
+    <update id="resetworker" parameterType="string">
+        update worker set password="111111" where num=#{num}
+    </update>
+    <update id="updateworker" parameterType="worker">
+        update worker set type_worker=#{type_worker} ,position=#{position},workstate=#{workstate}
+        where num=#{num};
+    </update>
+
+    <select id="searchworkers" parameterType="worker" resultType="worker">
+        select * from worker
+        <where>
+            <if test="userid!=null and userid!=''">
+                and userid=#{userid}
+            </if>
+            <if test="position!=null and position!= ''">
+                and positione=#{position}
+            </if>
+            <if test="type_worker!=null and type_worker!='' and type_worker!=-1 ">
+                and type_worker=#{type_worker}
+            </if>
+            <if test="workstate!=null and workstate!=''">
+                and workstate=#{workstate}
+            </if>
+        </where>
+    </select>
+
+    <select id="searchbill" parameterType="bill" resultType="bill">
+        select * from bill
+        <where>
+            <if test="num!=null and num!=''">
+                and num=#{num}
+            </if>
+            <if test="workerid!=null and workerid!= ''">
+                and workerid=#{workerid}
+            </if>
+            <if test="place!=null and place!=''">
+                and place like '%${place}%'
+            </if>
+            <if test="useing!=null and useing!=''">
+                and useing like '%${useing}%'
+            </if>
+        </where>
+    </select>
+
+    <update id="backinfor" parameterType="string">
+        update infor set ad_replay=#{arg1},state="退回" where num=#{arg0}
+    </update>
+
+    <select id="failinfor" resultMap="inforMap">
+        SELECT
+	*,
+	imagepath1 imagepath,
+	imagepath2 imagepath,
+	imagepath3 imagepath,
+	imagepath4 imagepath,
+	imagepath5 imagepath,
+	i.num inum,
+	r.num rnum,
+	i.createdate icreatedate,
+	r.createdate rcreatedate,
+	i.detail idetail,
+	r.detail rdetail
+FROM
+	infor i,
+	replay r
+WHERE
+
+	i.num = r.inforid
+	AND i.state = "维修失败"
+ORDER BY
+	i.createdate DESC
+    </select>
+
+    <select id="A_backinfor" resultMap="inforMap">
+        SELECT
+	*,
+	imagepath1 imagepath,
+	imagepath2 imagepath,
+	imagepath3 imagepath,
+	imagepath4 imagepath,
+	imagepath5 imagepath,
+	i.num inum,
+	r.num rnum,
+	i.createdate icreatedate,
+	r.createdate rcreatedate,
+	i.detail idetail,
+	r.detail rdetail
+FROM
+	infor i,
+	replay r
+WHERE
+     i.num = r.inforid
+	and i.state = "退回"
+ORDER BY
+	i.createdate DESC
+    </select>
+    <update id="revoke" parameterType="string">
+    update infor set state="待分配",ad_replay="" where num=#{num}
+</update>
+
+    <select id="equipmentlist" resultType="equipment">
+        select * from equipment
+    </select>
+
+    <update id="addequip" parameterType="string">
+        update equipment set number=number+#{num} where snum=#{snum}
+    </update>
+    <update id="subequip" parameterType="string">
+        update equipment set number=number-#{num} where snum=#{snum}
+    </update>
+    <update id="updateequipment" parameterType="equipment">
+        update equipment set
+        eqname=#{eqname},
+        model=#{model},
+        price=#{price},
+        company_name=#{company_name},
+        number=#{number}
+        where snum=#{snum}
+    </update>
+    <insert id="insertequipment" parameterType="equipment">
+        insert into equipment(eid,eqname,price,company_name,number,model) values(#{eid},#{eqname},#{price},#{company_name},#{number},#{model})
+    </insert>
+    <delete id="deleteequipment" parameterType="string">
+        delete from equipment where snum=#{snum}
+    </delete>
+    <select id="maxeid" resultType="int">
+        	select max(eid) from equipment;
+    </select>
+    <select id="noticelist" resultType="notice">
+        select * from notice
+    </select>
+
+    <delete id="deletenotice" parameterType="string">
+        delete from notice where num=#{num}
+    </delete>
+    <update id="updatenotice">
+        update notice set news=#{news} ,startime=#{startime},endtime=#{endtime} where num=#{num}
+    </update>
+    <insert id="insertnotice">
+        insert into notice(news,startime,endtime) values (#{news},#{startime},#{endtime})
+    </insert>
+
+    <select id="nownotice" resultType="notice">
+        select * from notice where startime&lt;=now() and endtime&gt;=now()
+    </select>
+
+    <insert id="Insertfeedback" parameterType="feedback">
+        insert into feedback(
+        <if test="uid!=null and uid!=''">
+            uid,
+        </if>
+        <if test="content!=null and content!=''">
+            content
+        </if>
+
+        )
+        values(
+        <if test="uid!=null and uid!=''">
+            #{uid},
+        </if>
+        <if test="content!=null and content!=''">
+            #{content}
+        </if>
+        )
+    </insert>
+
+    <select id="listfeedback" resultType="feedback">
+        select * from feedback
+    </select>
+
+    <select id="floornum" resultType="floornums">
+         SELECT (@i := @i + 1) AS num,FLOOR,COUNT(*) AS SUM FROM infor,(SELECT @i := 0) AS i
+        GROUP BY FLOOR ORDER BY SUM DESC
+    </select>
+    <resultMap id="equipsnum" type="java.util.HashMap">
+        <result column="equip" property="key" javaType="java.lang.String"/>
+        <result column="snum" property="value" javaType="java.lang.String"/>
+    </resultMap>
+    <select id="typenums" resultMap="equipsnum" parameterType="string">
+        SELECT equip,COUNT(*) AS snum FROM infor WHERE floor=#{floor}
+            GROUP BY equip
+    </select>
+
+    <select id="equipnums" resultMap="equipsnum">
+        SELECT equip,COUNT(*) AS snum FROM infor GROUP BY equip ORDER BY snum DESC
+    </select>
+    <resultMap id="typemap" type="java.util.HashMap">
+        <result column="eid" property="key" javaType="java.lang.String"/>
+        <result column="sum" property="value" javaType="java.lang.String"/>
+    </resultMap>
+    <select id="typeequip" resultType="java.util.Map">
+         SELECT eid ,COUNT(*) sum FROM replay WHERE eid IS NOT NULL
+        GROUP BY eid ORDER BY eid ASC
+    </select>
+    <select id="equip_price" parameterType="string" resultType="java.util.Map">
+        select eqname,price from equipment where eid=#{arg0}
+    </select>
+    <select id="eval_rank" resultType="worker">
+       SELECT (@i := @i + 1) AS num, userid,NAME,sum_eval FROM worker ,(SELECT @i := 0) AS i ORDER BY sum_eval DESC
+    </select>
+
+    <select id="use_num" resultType="java.util.HashMap">
+
+        SELECT  userid ,COUNT(*) AS num FROM infor GROUP BY userid;
+    </select>
+    <select id="w_num" resultType="workernum">
+
+    SELECT workerid ,COUNT(*) AS num ,AVG(t) tm FROM
+    (
+    SELECT workerid ,TIMESTAMPDIFF( HOUR,distribute_time,complete_time) AS t FROM infor WHERE state="维修成功"
+        )  AS tmp GROUP BY workerid;
+    </select>
+
+    <select id="equip_live" resultType="equip_live">
+        SELECT YEAR(complete_time) yer, MONTH( complete_time) AS mon,equip,COUNT(*) AS num FROM infor WHERE MONTH( complete_time) IN(
+
+SELECT MONTH(complete_time) AS m
+FROM infor GROUP BY m ) AND state="维修成功"  GROUP BY equip,mon ORDER BY yer,mon  ASC ;
+
+    </select>
+
+</mapper>

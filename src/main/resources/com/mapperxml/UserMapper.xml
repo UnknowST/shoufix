@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.Usermapper">
+    <resultMap id="inforMap" type="infor">
+        <result column="inum" property="num"></result>
+        <result column="userid" property="userid"></result>
+        <result column="place" property="place"></result>
+        <result column="equip" property="equip"></result>
+        <result column="detail" property="detail"></result>
+        <result column="evaluate" property="evaluate"></result>
+        <result column="workerid" property="workerid"></result>
+        <result column="state" property="state"></result>
+        <result column="comment" property="comment"></result>
+        <result column="ad_replay" property="ad_replay"></result>
+
+        <result column="reason" property="reason"></result>
+        <result column="floor" property="floor"></result>
+        <result column="layer" property="layer"></result>
+        <result column="h_number" property="h_number"></result>
+        <result column="distribute_time" property="distribute_time"></result>
+        <result column="complete_time" property="complete_time"></result>
+
+        <result column="icreatedate" property="createdate"></result>
+        <result column="imagepath1" property="imagepath1"></result>
+        <result column="imagepath2" property="imagepath2"></result>
+        <result column="imagepath3" property="imagepath3"></result>
+        <result column="imagepath4" property="imagepath4"></result>
+        <result column="imagepath5" property="imagepath5"></result>
+        <collection property="replay" ofType="replay">
+            <result column="rnum" property="num"></result>
+            <result column="inforid" property="inforid"></result>
+            <result column="workerid" property="workerid"></result>
+            <result column="rdetail" property="detail"></result>
+            <result column="eid" property="eid"></result>
+            <result column="numbers" property="numbers"></result>
+            <result column="rcreatedate" property="createdate"></result>
+        </collection>
+    </resultMap>
+
+
+    <select id="infor_num" resultMap="inforMap" parameterType="int">
+        SELECT *,
+        i.num inum,r.num rnum ,i.createdate icreatedate,r.createdate rcreatedate,i.detail idetail,r.detail rdetail
+        FROM infor i,replay r WHERE i.num=#{num} AND i.num=r.inforid
+
+
+    </select>
+
+    <update id="updateuser" parameterType="user">
+        update user set collage=#{collage}, name=#{name},
+        <if test="phone!=null and phone!=''">
+            phone=#{phone},
+        </if>
+
+        gender=#{gender}, mail=#{mail}  where num=#{num}
+    </update>
+    <select id="returnuser" resultType="user" parameterType="int">
+        select * from user where num=#{num}
+    </select>
+    <!--自动返回主键-->
+    <insert id="insertinfor" parameterType="infor">
+        insert into infor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid!=null and userid!=''">
+                userid,
+            </if>
+            <if test="floor!=null and floor!=''">
+                floor,
+            </if>
+            <if test="layer!=null and layer!=''">
+                layer,
+            </if>
+            <if test="h_number!=null and h_number!=''">
+                h_number,
+            </if>
+            <if test="equip!=null and equip!=''">
+                equip,
+            </if>
+            <if test="reason!=null and reason!=''">
+                reason,
+            </if>
+            <if test="detail!=null and detail!=''">
+                detail,
+            </if>
+            <if test="imagepath1!=null and imagepath1!=''">
+                imagepath1,
+            </if>
+            <if test="imagepath2!=null and imagepath2!=''">
+                imagepath2,
+            </if>
+            <if test="imagepath3!=null and imagepath3!=''">
+                imagepath3,
+            </if>
+            <if test="imagepath4!=null and imagepath4!=''">
+                imagepath4,
+            </if>
+            <if test="imagepath5!=null and imagepath5!=''">
+                imagepath5,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid!=null and userid!=''">
+                #{userid},
+            </if>
+            <if test="floor!=null and floor!=''">
+                #{floor},
+            </if>
+            <if test="layer!=null and layer!=''">
+                #{layer},
+            </if>
+            <if test="h_number!=null and h_number!=''">
+                #{h_number},
+            </if>
+            <if test="equip!=null and equip!=''">
+                #{equip},
+            </if>
+            <if test="reason!=null and reason!=''">
+                #{reason},
+            </if>
+            <if test="detail!=null and detail!=''">
+                #{detail},
+            </if>
+            <if test="imagepath1!=null and imagepath1!=''">
+                #{imagepath1},
+            </if>
+            <if test="imagepath2!=null and imagepath2!=''">
+                #{imagepath2},
+            </if>
+            <if test="imagepath3!=null and imagepath3!=''">
+                #{imagepath3},
+            </if>
+            <if test="imagepath4!=null and imagepath4!=''">
+                #{imagepath4},
+            </if>
+            <if test="imagepath5!=null and imagepath5!=''">
+                #{imagepath5},
+            </if>
+        </trim>
+
+        <selectKey keyProperty="num" resultType="int">
+            select LAST_INSERT_ID() as num
+        </selectKey>
+    </insert>
+
+    <insert id="creatreplay" parameterType="int">
+        insert into replay(inforid) values (#{inforid})
+    </insert>
+
+    <select id="findbyuserid" resultMap="inforMap" parameterType="string">
+   SELECT *,
+     imagepath1 imagepath,imagepath2 imagepath,imagepath3 imagepath,imagepath4 imagepath,imagepath5 imagepath,
+    i.num inum,r.num rnum,i.createdate icreatedate,r.createdate rcreatedate,i.detail idetail,r.detail rdetail
+        FROM infor i,replay r WHERE i.userid=#{userid} AND i.num=r.inforid ORDER BY i.createdate DESC
+
+    </select>
+
+    <delete id="delete_infor" parameterType="int">
+        delete from infor where num=#{num}
+    </delete>
+
+    <delete id="delete_replay" parameterType="int">
+        delete from replay where inforid=#{inforid}
+    </delete>
+
+    <update id="update_infor" parameterType="infor">
+        update infor
+        <set>
+            <if test="place!=null">
+                place=#{place},
+            </if>
+            <if test="equip!=null">
+                equip=#{equip},
+            </if>
+            <if test="detail!=null">
+                detail=#{detail},
+            </if>
+            <if test="imagepath1!=null">
+                imagepath1=#{imagepath1},
+            </if>
+            <if test="imagepath1==null">
+                imagepath1='null',
+            </if>
+            <if test="imagepath2!=null">
+                imagepath2=#{imagepath2},
+            </if>
+            <if test="imagepath2==null">
+                imagepath2='null',
+            </if>
+            <if test="imagepath3!=null">
+                imagepath3=#{imagepath3},
+            </if>
+            <if test="imagepath3==null">
+                imagepath3='null',
+            </if>
+            <if test="imagepath4!=null">
+                imagepath4=#{imagepath4},
+            </if>
+            <if test="imagepath4==null">
+                imagepath4='null',
+            </if>
+            <if test="imagepath5!=null">
+                imagepath5=#{imagepath5},
+            </if>
+            <if test="imagepath5==null">
+                imagepath5='null',
+            </if>
+        </set>
+        where num=#{num}
+    </update>
+
+    <update id="modif_pass">
+        update user set password=#{param2} where num=#{param1}
+    </update>
+
+    <update id="updateevl">
+        update infor set evaluate=#{param2},comment=#{param4} where num=#{param1}
+
+    </update>
+
+    <update id="updatew_evl">
+        update worker set  sum_eval=sum_eval+#{param2} where userid=#{param1}
+    </update>
+
+    <select id="infor_dai" resultMap="inforMap" parameterType="string">
+   SELECT *,
+    imagepath1 imagepath,imagepath2 imagepath,imagepath3 imagepath,imagepath4 imagepath,imagepath5 imagepath,
+   i.num inum,r.num rnum ,i.createdate icreatedate,r.createdate rcreatedate,i.detail idetail,r.detail rdetail
+        FROM infor i,replay r WHERE i.userid=#{userid} AND i.num=r.inforid and i.state="待分配" ORDER BY i.createdate DESC
+
+    </select>
+
+    <select id="infor_ing" resultMap="inforMap" parameterType="string">
+   SELECT *,
+    imagepath1 imagepath,imagepath2 imagepath,imagepath3 imagepath,imagepath4 imagepath,imagepath5 imagepath,
+   i.num inum,r.num rnum ,i.createdate icreatedate,r.createdate rcreatedate,i.detail idetail,r.detail rdetail
+        FROM infor i,replay r WHERE i.userid=#{userid} AND i.num=r.inforid and i.state="正在维修" ORDER BY i.createdate DESC
+
+    </select>
+
+    <select id="infor_wait" resultMap="inforMap" parameterType="string">
+   SELECT *,
+    imagepath1 imagepath,imagepath2 imagepath,imagepath3 imagepath,imagepath4 imagepath,imagepath5 imagepath,
+   i.num inum,r.num rnum ,i.createdate icreatedate,r.createdate rcreatedate,i.detail idetail,r.detail rdetail
+        FROM infor i,replay r WHERE i.userid=#{userid} AND i.num=r.inforid and i.state="待维修" ORDER BY i.createdate DESC
+
+    </select>
+
+    <select id="infor_eval" resultMap="inforMap" parameterType="string">
+   SELECT *,
+    imagepath1 imagepath,imagepath2 imagepath,imagepath3 imagepath,imagepath4 imagepath,imagepath5 imagepath,
+   i.num inum,r.num rnum ,i.createdate icreatedate,r.createdate rcreatedate,i.detail idetail,r.detail rdetail
+        FROM infor i,replay r WHERE i.userid=#{userid} AND i.num=r.inforid and  i.state="维修成功" and i.evaluate=0 ORDER BY i.createdate DESC
+
+    </select>
+
+    <update id="user_head">
+        update user set headpath=#{param2} where userid=#{param1}
+    </update>
+
+    <select id="listInfor" resultType="infor">
+        SELECT *FROM infor i WHERE  i.state="维修成功"  and i.evaluate!=0  AND  DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= DATE(i.createdate)
+    </select>
+
+    <select id="normalInfor" resultMap="inforMap" parameterType="string">
+
+       SELECT
+	*,
+	imagepath1 imagepath,
+	imagepath2 imagepath,
+	imagepath3 imagepath,
+	imagepath4 imagepath,
+	imagepath5 imagepath,
+	i.num inum,
+	r.num rnum,
+	i.createdate icreatedate,
+	r.createdate rcreatedate,
+	i.detail idetail,
+	r.detail rdetail
+FROM
+	infor i,
+	replay r
+WHERE
+	i.userid = #{userid}
+	AND i.num = r.inforid
+	AND i.state in("维修失败", "退回")
+ORDER BY
+	i.createdate DESC
+
+    </select>
+
+    <select id="infor_ok" resultMap="inforMap">
+        SELECT
+	*,
+	imagepath1 imagepath,
+	imagepath2 imagepath,
+	imagepath3 imagepath,
+	imagepath4 imagepath,
+	imagepath5 imagepath,
+	i.num inum,
+	r.num rnum,
+	i.createdate icreatedate,
+	r.createdate rcreatedate,
+	i.detail idetail,
+	r.detail rdetail
+FROM
+	infor i,
+	replay r
+WHERE
+	 i.state="维修成功" and i.userid = #{userid} AND i.num=r.inforid  ORDER BY i.createdate DESC
+    </select>
+<!--and i.evaluate!=0-->
+    <update id="deleteimages" parameterType="string">
+                  UPDATE infor SET imagepath1='null',imagepath2='null',imagepath3='null',imagepath4='null',imagepath5='null' WHERE num=#{num}
+    </update>
+
+    <select id="back_workerid" resultType="string">
+        SELECT  userid FROM
+        (
+        SELECT * FROM
+        (
+        SELECT b.userid,COUNT(i.workerid) AS snum FROM infor i RIGHT JOIN worker  b
+
+        ON i.workerid =b.userid  AND i.state="正在维修" GROUP BY b.userid  ) AS temp WHERE userid IN(
+
+        SELECT userid FROM  worker  WHERE type_worker =(
+        SELECT w.num FROM type_equip t,type_worker w WHERE t.`type`=w.`num` AND t.equip=#{arg0}) AND workstate="Y"  )
+        ORDER BY snum ASC )  AS temp1 LIMIT 1
+    </select>
+    <update id="fenpeiinfor" parameterType="string">
+        update infor set workerid=#{arg1} , state="正在维修",distribute_time=NOW() where num=#{arg0}
+    </update>
+
+</mapper>

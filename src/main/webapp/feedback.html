@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="Js/jquery-1.11.0.min.js"></script>
+  <script>
+    function showQQ() {
+      var dis = document.getElementById("QQGroup").style.display;
+      if (dis == "none") document.getElementById("QQGroup").style.display = "block";
+      else document.getElementById("QQGroup").style.display = "none";
+    }
+
+    function tijiao() {
+
+      $.ajax({
+        url: 'public/insertfeedback',
+        type: 'post',
+        dataType: 'json',
+        async: false,
+        data: { content: $("#text").val() },
+        success: function (message) {
+          if (message.flag == 1) {
+            alert(message.message);
+            window.history.go(0);
+            document.getElementById("text").innerText = "";
+          } else alert(message.message);
+        }
+      })
+    }
+  </script>
+  <script>
+    function noshow() {
+      var T = document.getElementById("text").value;
+      if (T == "请输入您的建议：")
+        document.getElementById("text").innerText = "";
+
+    }
+    function show() {
+      var T = document.getElementById("text").value;
+      if (T == "")
+        document.getElementById("text").innerText = "请输入您的建议：";
+    }
+
+  </script>
+
+</head>
+
+<body>
+  <br><br><br><br>
+
+
+  <center>
+    <div style="width: 800px;border:#556270 solid;border-radius: 18px;">
+      <div style="background-color: #556270;height: 70px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+        <div style="float: left;font-weight: bolder;margin-top: 17px;margin-left: 18px;font-size: 30px;">
+          问题反馈
+        </div>
+      </div>
+      <div
+        style="  background-color: #dbe6f4;min-height:500px;height:auto;width: 800px;border-bottom-left-radius: 15px;border-bottom-right-radius: 15px;">
+        <br><br>
+        <form>
+          <textarea maxlength="200" style="width: 500px;height: 200px;font-style:italic" id="text" onblur="show()"
+            onfocus="noshow()">请输入您的建议：</textarea><br><br>
+          <input type="button" id="btn1" onclick="tijiao()" style="width: 100px;height: 30px;" value="提交">
+          <input type="reset" style="width: 100px;height: 30px;" value="重置">
+        </form>
+        <div style="float: left;">备注：</div><br>
+        <div style="float: left;">
+          对于使用过程中还有什么功能、使用以及反馈方面的建议或者意见呢？欢迎告诉我们哦。
+          可以通过上述简短描述您的需求、期望，也可联系&nbsp;
+          <strong><a href="javascript:showQQ()">开发小组</a></strong>&nbsp;进一步沟通。
+        </div><br><br>
+        <div id="QQGroup" style="display: none;">
+          <img src="img/QQGroup.jpg" style="width: 300px;height: 500px;">
+        </div>
+      </div>
+    </div>
+
+  </center>
+</body>
+
+</html>

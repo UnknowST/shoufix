@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="Js/jquery-1.11.0.min.js"></script>
+    <script src="Js/jquery.cookie.js"></script>
+    <title>登陆系统</title>
+    <style>
+        html {
+            width: 100%;
+            background-image: url(img/BG.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .div1 {
+            width: 1000px;
+            height: 610px;
+            margin-left: 300px;
+            margin-top: 5%;
+            background-color: whitesmoke;
+        }
+
+        .imgGJ {
+            width: 500px;
+            height: 560px;
+        }
+
+        .lableBT {
+            font-family: "微软雅黑";
+            font-size: 24pt;
+        }
+
+        .lableradiu {
+            font-family: "微软雅黑";
+            font-size: 16pt;
+        }
+
+        .forgetpass {
+            font-family: "微软雅黑";
+            font-size: 14pt;
+            color: #a1a1a1;
+
+        }
+
+        a.forget {
+            text-decoration: none;
+            color: #a1a1a1;
+        }
+
+        .repass {
+            color: #a1a1a1;
+        }
+
+        .loginbuttonlable {
+            background-color: black;
+            color: white;
+        }
+
+        input::-webkit-input-placeholder {
+            color: #a1a1a1;
+            font-size: 14pt;
+        }
+
+        a.button {
+            text-decoration: none;
+            width: 70px;
+            height: 20px;
+        }
+
+        .ts {
+            text-decoration: none;
+            color: #a1a1a1;
+            font-size: 15px;
+        }
+    </style>
+
+
+    <script>
+        $(function () {
+            var user = $.cookie("userid");
+            var pass = $.cookie("password");
+            if (user && user.length > 0) {
+                $("#id").val(user);
+            }
+            if (pass && pass.length > 0) {
+                $("#password").val(pass);
+            }
+
+        })
+
+        function checkid() {
+            var num = -1;
+            var num = $('input:radio[name="user"]:checked').val();
+            if (num == 1) var t1 = /^1[3|4|5|8|9][0-9]\d{4,8}$/;
+            if (num == 2) var t1 = /[1-9]\d{5}$/;
+
+            var id = document.getElementById("id").value;
+
+            if (id == "" || id == null) {
+                document.getElementById("Errorid").innerText = "*请输入账号！";
+                return false;
+            }
+
+            else {
+                //判断是否为手机号码的正则表达式：
+                if (t1.test(id)) {
+                    document.getElementById("Errorid").innerText = " ";
+                    return true;
+                }
+                else {
+                    document.getElementById("Errorid").innerText = "*账号格式不正确！";
+                    return false;
+                }
+
+            }
+        }
+        function checkpass() {
+            var pass = document.getElementById("password").value;
+            if (pass == "" || pass == null) {
+                document.getElementById("Errorpass").innerText = "*请输入密码！";
+                return false;
+            }
+            else {
+                document.getElementById("Errorpass").innerText = " ";
+                return true;
+            }
+        }
+        function checkbt1() {
+            checkid();
+            checkpass();
+            if (checkid() && checkpass()) {
+                var formdata = { "num": $('input:radio[name="user"]:checked').val(), "userid": $("#id").val(), "password": $("#password").val() }
+                // alert($('#checkbox-input').is(':checked'));
+
+                $.ajax({
+                    url: 'login/test1',
+                    data: formdata,
+                    type: 'post',
+                    dataType: 'json',
+                    async: false,
+                    success: function (message) {
+                        if (message.flag == 1) {
+                            var flag = $("#repass").is(":checked")  //判断记住密码按钮是否选中
+                            if (flag == true) {
+                                $.cookie("userid", $("#id").val(), { expires: 7 })
+                                $.cookie("password", $("#password").val(), { expires: 7 })
+                            }
+                            var num = $('input:radio[name="user"]:checked').val()//取到单选值
+                            if (num == 1)
+                                window.location.href = "Th_S.html";
+                            if (num == 2)
+                                window.location.href = "Th_W.html";
+
+
+                        } else {
+                            $("#p1").html(message.message);
+                        }
+                    }
+                })
+            }
+
+
+            else {
+                // alert("登陆失败！请检查账号或密码是否正确。");
+            }
+
+        }
+
+
+    </script>
+
+</head>
+
+<body>
+    <div class="div1">
+        <!-- 主体框 -->
+        <div style="float: left;width: 50%;">
+            <div style="margin-left: 100px;margin-top: 100px;width: 80%;">
+                <form action="" name="form" id="form">
+                    <label class="lableBT">欢迎进入！</label><br><br>
+                    <p id="p1" style="color: red"></p>
+                    <br><br>
+                    <input type="radio" name="user" id="user" value="1"><label class="lableradiu">普通用户</label>
+                    <input type="radio" name="user" id="user" value="2"><label class="lableradiu">维修师傅</label><br><br>
+                    <input onblur="checkid()" type="text" placeholder="账号" name="id" id="id"
+                        style="width: 210px;height: 30px;"><span id="Errorid"
+                        style="width: 60px;color:red"></span><br><br>
+                    <input onblur="checkpass()" type="password" placeholder="密码" name="password" id="password"
+                        style="width: 210px;height: 30px;"><span id="Errorpass"
+                        style="width: 60px;color:red"></span><br><br>
+                    <input type="checkbox" name="repass" id="repass">
+                    <label
+                        class="repass">记住密码</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="findpassword.html" class="forget">忘记密码</a><br><br>
+                    <div
+                        style="width: 70px;height: 25px;background-color: black;border: 2px solid;float: left;text-align: center;">
+                        <a style="color: white;" href="#" class="button" onclick="checkbt1()">登陆</a>
+                    </div>
+                    <div
+                        style="width: 70px;height: 25px;border:2px #a1a1a1 solid;float: left;text-align: center;margin-left: 15px;">
+                        <a style="color: #a1a1a1;" href="register.html" class="button">注册</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 右边的图 -->
+        <div style="float: right;">
+            <img src="img/GJ.jpg" class="imgGJ">
+        </div>
+        <div
+            style="float: left; width: 100%;height: 50px; margin-top: -5px;background-color: whitesmoke;text-align: center;">
+            <p style="line-height: 20px;">
+                <a href="expla.html" class="ts">使用说明</a>&nbsp;&nbsp;&nbsp;
+                <a href="feedback.html" class="ts">反馈中心</a>&nbsp;&nbsp;&nbsp;
+                <a href="author.html" class="ts">联系作者</a>&nbsp;&nbsp;&nbsp;
+                <a href="Admin.html" class="ts">管理系统</a>&nbsp;&nbsp;&nbsp;
+                <a target="_blank" href="http://beian.miit.gov.cn" class="ts">黔ICP备 2020011355号</a>&nbsp;&nbsp;&nbsp;
+                <a class="ts" target="_blank"
+                    href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=52022202000081">
+                    <img src="img/beian.png">贵安网公备 52022202000081号</a>&nbsp;&nbsp;&nbsp;
+                <a class="ts">版本号：SN.21.3.14.01</a>
+            </p>
+        </div>
+    </div>
+    <!-- 
+    
+ -->
+</body>
+
+</html>

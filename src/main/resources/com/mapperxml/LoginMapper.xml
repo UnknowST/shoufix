@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.Loginmapper">
+    <select id="Userlogin" resultType="user" parameterType="user">
+        select * from user where userid=#{userid} and password=#{password}
+    </select>
+
+    <select id="Workerlogin" resultType="worker" parameterType="worker">
+        select  * from worker where userid=#{userid} and password=#{password}
+    </select>
+    <select id="check_userid" resultType="user" parameterType="string">
+        select * from user where userid=#{userid}
+    </select>
+
+    <!--把注册得方法也写在该配置文件下-->
+    <insert id="insertuser" parameterType="user">
+        insert into user(userid,password) values(#{userid},#{password})
+    </insert>
+
+    <!--激活用户相关-->
+    <select id="findbycode" resultType="user">
+        select  * from user where code=#{code}
+    </select>
+    <update id="updatestatus" parameterType="string">
+        update user set status="Y" where userid=#{userid}
+    </update>
+
+    <insert id="insertworker" parameterType="worker">
+        insert into worker(userid,password) values(#{userid},#{password})
+    </insert>
+    <select id="checkemail_user" parameterType="string" resultType="user">
+        select * from user where userid=#{arg0} and mail=#{arg1}
+    </select>
+    <select id="checkemail_worker" parameterType="string" resultType="worker">
+        select * from worker where userid=#{arg0} and mail=#{arg1}
+    </select>
+    <update id="modifpass_user" parameterType="string">
+        update   user set password=#{arg1} where userid=#{arg0}
+    </update>
+    <update id="modifpass_worker" parameterType="string">
+        update   worker set password=#{arg1} where userid=#{arg0}
+    </update>
+
+    <select id="checkuserid" resultType="string">
+        select userid from user;
+    </select>
+    <select id="checkemail" resultType="string">
+        select mail from user;
+    </select>
+</mapper>

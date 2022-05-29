@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html style="background-color:ghostwhite ;">
+
+<head>
+	<meta charset="UTF-8">
+	<title>学生界面</title>
+	<script src="Js/jquery-3.3.1.js"></script>
+	<script src="Js/finduser.js"></script>
+	<script src="Th_Sshowpage.js"></script>
+	<style>
+		button {
+			font-size: 20px;
+			font-weight: 800;
+			width: 100%;
+			height: 100%;
+			border: none;
+		}
+
+		td {
+			text-align: center;
+			background-color: #cfdef3;
+			width: 200px;
+			height: 100px;
+		}
+
+		td a {
+			text-align: center;
+		font-size: 15px;
+        margin-top: 10px;
+        font-weight: bolder;
+		text-decoration: none;
+        color: #000;
+		}
+
+		.img1 {
+			width: 100px;
+			height: 100px;
+		}
+
+		.td1 {
+			width: 900px;
+		}
+
+		.table1 {
+			text-align: center;
+			width: 1000px;
+			height: 768px;
+			border-collapse: collapse;
+		}
+
+		.table2 {
+			height: 100px;
+			text-align: center;
+			float: right;
+		}
+
+		iframe {
+			width: 900px;
+			height: 690px;
+			margin-top: 10px;
+			background-color: #dbe6f4;
+
+		}
+
+		.span1 {
+			margin-left: 280px;
+			margin-right: 100px;
+			float: left;
+			color: #000000;
+			margin-top: 25px;
+			font-size: 40px;
+		}
+
+		.span2 {
+			float: left;
+			margin-left: 100px;
+		}
+	</style>
+	<!--头像上传-->
+	<link href="https://cdn.bootcss.com/cropper/3.1.3/cropper.min.css" rel="stylesheet">
+	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<style type="text/css">
+		body {
+			text-align: center;
+		}
+
+		#user-photo {
+			width: 300px;
+			height: 300px;
+			margin-top: 10px;
+		}
+
+		#photo {
+			max-width: 100%;
+			max-height: 350px;
+		}
+
+		.img-preview-box {
+			text-align: center;
+		}
+
+		.img-preview-box>div {
+			display: inline-block;
+			;
+			margin-right: 10px;
+		}
+
+		.img-preview {
+			overflow: hidden;
+		}
+
+		.img-preview-box .img-preview-lg {
+			width: 150px;
+			height: 150px;
+		}
+
+		.img-preview-box .img-preview-md {
+			width: 100px;
+			height: 100px;
+		}
+
+		.img-preview-box .img-preview-sm {
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="css/popup.css" />
+	<!--//引入css-->
+</head>
+
+<body style="background-color:ghostwhite ;">
+	<br>
+	<center>
+		</div>
+		<div class="modal fade" id="changeModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<h4 class="modal-title text-primary">
+							<i class="fa fa-pencil"></i>
+							更换头像
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p class="tip-info text-center">
+							未选择图片
+						</p>
+						<div class="img-container hidden">
+							<img src="" alt="" id="photo">
+						</div>
+						<div class="img-preview-box hidden">
+							<hr>
+							<span>150*150:</span>
+							<div class="img-preview img-preview-lg">
+							</div>
+							<span>100*100:</span>
+							<div class="img-preview img-preview-md">
+							</div>
+							<span>30*30:</span>
+							<div class="img-preview img-preview-sm">
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<label class="btn btn-danger pull-left" for="photoInput">
+							<input type="file" class="sr-only" id="photoInput" accept="image/*">
+							<span>打开图片</span>
+
+						</label>
+						<button class="btn btn-primary disabled" disabled="true" onclick="sendPhoto();">提交</button>
+						<button class="btn btn-close" aria-hidden="true" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdn.bootcss.com/cropper/3.1.3/cropper.min.js"></script>
+		<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			var initCropperInModal = function (img, input, modal) {
+				var $image = img;
+				var $inputImage = input;
+				var $modal = modal;
+				var options = {
+					aspectRatio: 1, // 纵横比
+					viewMode: 2,
+					preview: '.img-preview' // 预览图的class名
+				};
+				// 模态框隐藏后需要保存的数据对象
+				var saveData = {};
+				var URL = window.URL || window.webkitURL;
+				var blobURL;
+				$modal.on('show.bs.modal', function () {
+					// 如果打开模态框时没有选择文件就点击“打开图片”按钮
+					if (!$inputImage.val()) {
+						$inputImage.click();
+					}
+				}).on('shown.bs.modal', function () {
+					// 重新创建
+					$image.cropper($.extend(options, {
+						ready: function () {
+							// 当剪切界面就绪后，恢复数据
+							if (saveData.canvasData) {
+								$image.cropper('setCanvasData', saveData.canvasData);
+								$image.cropper('setCropBoxData', saveData.cropBoxData);
+							}
+						}
+					}));
+				}).on('hidden.bs.modal', function () {
+					// 保存相关数据
+					saveData.cropBoxData = $image.cropper('getCropBoxData');
+					saveData.canvasData = $image.cropper('getCanvasData');
+					// 销毁并将图片保存在img标签
+					$image.cropper('destroy').attr('src', blobURL);
+				});
+				if (URL) {
+					$inputImage.change(function () {
+						var files = this.files;
+						var file;
+						if (!$image.data('cropper')) {
+							return;
+						}
+						if (files && files.length) {
+							file = files[0];
+							if (/^image\/\w+$/.test(file.type)) {
+
+
+								if (blobURL) {
+									URL.revokeObjectURL(blobURL);
+								}
+								blobURL = URL.createObjectURL(file);
+
+
+								// 重置cropper，将图像替换
+								$image.cropper('reset').cropper('replace', blobURL);
+
+
+								// 选择文件后，显示和隐藏相关内容
+								$('.img-container').removeClass('hidden');
+								$('.img-preview-box').removeClass('hidden');
+								$('#changeModal .disabled').removeAttr('disabled').removeClass('disabled');
+								$('#changeModal .tip-info').addClass('hidden');
+
+
+							} else {
+								window.alert('请选择一个图像文件！');
+							}
+						}
+					});
+				} else {
+					$inputImage.prop('disabled', true).addClass('disabled');
+				}
+			}
+
+
+
+			var sendPhoto = function () {
+				// 得到PNG格式的dataURL
+				var photo = $('#photo').cropper('getCroppedCanvas', {
+					width: 300,
+					height: 300
+				}).toDataURL('image/png');
+
+				$.ajax({
+					url: 'user/headupload', // 要上传的地址
+					type: 'post',
+					data: {
+						'file': photo, 'userid': getuser().userid
+					},
+					dataType: 'json',
+					success: function (data) {
+						if (data.flag == 1) {
+							// 将上传的头像的地址填入，为保证不载入缓存加个随机数
+							alert(data.message);
+							window.history.go(0);
+						} else {
+							alert(data.message);
+						}
+					}
+				});
+
+			}
+
+
+			$(function () {
+				initCropperInModal($('#photo'), $('#photoInput'), $('#changeModal'));
+			});
+		</script>
+
+
+
+		<link rel="stylesheet" type="text/css" href="css/popup.css" />
+		<!--//引入css-->
+		<script>
+			function checkpassword1() {
+				var reg_password = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{6,16}$/;
+
+				var password1 = $("#password1").val();
+
+				var flag = reg_password.test(password1);
+				if (password1 == null || password1 == "") { $("#newpas1").html("请输入密码"); return false }
+				if (flag) {
+					$("#newpas1").html("");
+					return true;
+				}
+				else {
+					$("#newpas1").html("*密码格式有误,请输入至少6-16个字符，" + "<br>" + "至少1个大写字母，1个小写字母和1个数字，其他可以是任意字符;");
+					return false;
+				}
+
+			}
+			function checkpassword2() {
+				var password2 = $("#password2").val();
+				var password1 = $("#password1").val();
+				if (password2 == null || password2 == "") {
+					$("#newpas2").html("请再次输入密码！"); return false;
+				} else {
+					if (password2 == password1) {
+						$("#newpas2").html("");
+						return true
+					}
+					else {
+						$("#newpas2").html("两次输入的密码不相同！")
+					}
+
+				}
+			}
+			function checkpass() {
+				var password = $("#password").val();
+
+				if (password == null || password == "") {
+					$("#pas").html("请输入原密码"); return false;
+
+				} else {
+					if (password != getuser().password) {
+						$("#pas").html("原密码错误"); return false;
+					} else {
+						$("#pas").html("");
+
+						return true
+					}
+
+				}
+			}
+			$(function () {
+				/*检查信息*/
+				var user = getuser();
+
+				if (user.mail == null || user.mail == "" || user.gender == null || user.gender == "") {
+					var flag = confirm("请先完善个人信息!");
+					if (flag == true || flag == false) {
+						//$("#modifa").click();
+						document.getElementById("modifa").click();
+					}
+
+				}
+				//设置头像的路径
+				if (getuser().headpath != null && getuser().headpath.length != 0) {
+					$("#img1").attr("src", getuser().headpath);
+				} else {
+
+					$("#img1").attr("src", "img/1.png")
+				}
+
+
+				//获取用户账号
+				$("#div1").html(getuser().userid);
+				$("#iframe").attr("src", 'user/allinfor?userid=' + getuser().userid + '&p=1')
+				$("#iframe2").attr("src", 'user/normalinfor?userid=' + getuser().userid + '&p=1');
+				$("#img1").click(function () {
+
+					if ($("#div2").css("display") == 'none') $("#div2").css("display", "block");
+					else $("#div2").css("display", "none");
+
+
+				})
+				$("#modif_pas").click(function () {
+					document.getElementById('all_light').style.display = 'block';
+
+					document.getElementById('contes').style.display = 'block';
+
+				})
+
+				$("#btn1").click(function () {
+					if (checkpass() && checkpassword1() && checkpassword2()) {
+						$.ajax({
+							url: 'user/modif_pass',
+							type: 'post',
+							dataType: 'json',
+							data: { "num": getuser().num, "password": $("#password1").val() },
+							async: false,
+							success: function (message) {
+								if (message.flag == 1) {
+									alert(message.message);
+									window.location.href = "login/exit"
+								} else {
+									alert(message.message)
+								}
+
+							}
+						})
+					}
+					return false;
+				})
+
+				$("#password1").blur(checkpassword1);
+				$("#password2").blur(checkpassword2);
+				$("#password").blur(checkpass);
+
+
+			})
+		</script>
+		<table class="table1">
+			<tr cellspacing="10px">
+				<td style="background-color: #556270;">
+					<div>
+						<a href="login.html">
+							<img class="img1" src="img/logoT.png" />
+						</a>
+					</div>
+				</td>
+				<td colspan="6" style="background-color: #556270;">
+					<span class="span1">
+						AIRepair
+					</span>
+
+					<!--此处的css未完成！-->
+					<table class="table2">
+						<!-- 第一行： -->
+						<tr>
+							<!-- 第一列 头像列 -->
+							<td style="width: 100px;height: 50px;background-color: #556270;" rowspan=2>
+								<div style="width: 100px;height: 50px;">
+									<img style="width: 50px;height: 50px;float: left;" id="img1">
+								</div>
+
+								<!-- 文字提醒： -->
+								<div style="width: 100px;height: 50px;display: none;" id="div2">
+									<a style="width: 50px;height: 50px;font-size: 10px;" class="#" id="modif_pas"
+										onclick="javascript:void(0)">修改密码</a>
+									<a style="width: 50px;height: 50px;font-size: 10px;" class="#"
+										data-target="#changeModal" data-toggle="modal">修改头像</a>
+								</div>
+							</td>
+							<!-- 第二列：退出登陆 -->
+							<td style="width: 100px;height: 50px;background-color: #556270;" colspan="2">
+								<a href="login/exit" style="float: left;color: black;">
+									<img src="img/exit.png" style="width:30px;height:30px;">
+									<span>Exit</span>
+								</a>
+							</td>
+						</tr>
+						<!-- 第二行 -->
+						<tr>
+							<td style="width: 130px;height: 50px;background-color: #556270;" colspan="2">
+								<strong><label style="float: left;color: #000000;">欢迎：</label></strong>
+								<div id="div1" style="float: left;"></div>
+							</td>
+						</tr>
+
+					</table>
+					<!--此处的css未完成！-->
+				</td>
+			</tr>
+			<tr>
+				<td id="td1"><a href="javascript:showpage(1)">修改个人信息</a></td>
+
+				<td class="td1" style="background-color: #dbe6f4;" colspan="6" rowspan="12">
+					<!-- 功能对应的HTML网页 -->
+
+
+
+					<!-- 修改个人信息 -->
+					<div id="page1" style="display:none;">
+						<iframe src="s_information.html" frameborder="0" leftmargin="0"></iframe>
+					</div>
+
+					<script>
+
+						function close1() {
+							document.getElementById('all_light').style.display = 'none';
+							document.getElementById('contes').style.display = 'none';
+						}
+					</script>
+					<div4 id="contes">
+
+						<div5 style="width:500px;height:40px;">
+
+							<p align="centre">修改密码</p>
+							<hr>
+
+
+							<form id="modifpas">
+								<table>
+									<tr>
+										<td>请输入原密码</td>
+										<td><input type="password" id="password">
+											<span id="pas"></span>
+										</td>
+									</tr>
+									<tr>
+										<td>新密码:</td>
+										<td><input type="password" id="password1">
+											<span id="newpas1"></span>
+										</td>
+									</tr>
+									<tr>
+										<td>再次输入新密码:</td>
+										<td><input type="password" id="password2">
+											<span id="newpas2"></span>
+										</td>
+									</tr>
+									<tr>
+										<td><button id="btn1">确认修改</button></td>
+										<td><button id="btn2" onclick="close1()">返回</button></td>
+									</tr>
+								</table>
+							</form>
+
+						</div5>
+
+					</div4>
+					<div6 id="all_light">
+					</div6>
+
+					<!-- 发布报修申请 -->
+					<div id="page2" style="display:block;">
+						<iframe src="s_repair.html" frameborder="0" leftmargin="0"></iframe>
+					</div>
+
+					<!-- 查看维修记录 -->
+					<div id="page3" style="display:none;">
+						<iframe frameborder="0" leftmargin="0" id="iframe">
+						</iframe>
+					</div>
+					<!-- 查看校园维修公告 -->
+					<div id="page4" style="display:none;">
+						<iframe src="notice_2.html" frameborder="0" leftmargin="0" id="iframe1">
+						</iframe>
+					</div>
+					<!-- 校园申报统计 -->
+					<div id="page5" style="display:none;">
+						<iframe src="Canves/userpage.html" frameborder="0" leftmargin="0"></iframe>
+					</div>
+					<!-- 功能意见反馈 -->
+					<div id="page6" style="display:none;">
+						<iframe src="feedback.html" frameborder="0" leftmargin="0"></iframe>
+					</div>
+				</td>
+			</tr> <!-- 要添加功能，注意修改rowspan的值 -->
+
+			<tr>
+				<td id="td2"><a href="javascript:showpage(2)">发布报修申请</a></td>
+			</tr>
+			<tr>
+				<td id="td3"><a href="javascript:showpage(3)">查看维修记录</a></td>
+			</tr>
+			<tr>
+				<td id="td5"><a href="javascript:showpage(5)">校园申报统计</a></td>
+			</tr>
+			<tr>
+				<td id="td4"><a href="javascript:showpage(4)">校园维修公告</a></td>
+			</tr>
+			<tr>
+				<td id="td6"><a href="javascript:showpage(6)">功能意见反馈</a></td>
+			</tr>
+			<tr>
+				<td id="td7"><strong>更多功能，敬请期待...</strong></td>
+			</tr>
+		</table>
+	</center>
+</body>
+
+</html>

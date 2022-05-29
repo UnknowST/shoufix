@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html style="background-color:ghostwhite ;">
+
+<head>
+	<meta charset="UTF-8">
+	<title>管理系统</title>
+	<script src="Js/jquery-3.3.1.js"></script>
+	<script src="Th_Ajs.js"></script>
+	<link href="Th_A.css" rel="stylesheet">
+</head>
+
+
+<body>
+	<!-- 66CCCC -->
+
+	<center>
+		<table class="table1">
+			<tr>
+				<td style="background-color: #556270;">
+					<div>
+						<a href="login.html">
+							<img class="img1" src="img/logoT.png" />
+						</a>
+					</div>
+				</td>
+				<td colspan="6" style="background-color: #556270;">
+					<span class="span1">
+						AIRepair
+					</span>
+
+					<!--此处的css未完成！-->
+					<table class="table2">
+						<tr>
+							<td style="height: 80px;width: 80px;background-color:#556270;" rowspan=2>
+								<span style="float: left;">
+									<img src="img/admin.png" style="height: 80px;width: 80px;" />
+								</span>
+							</td>
+							<td style=" height: 35px;width: 100px;background-color:#556270;" colspan="2">
+								<a href="login/exit" style="color: black;">
+									<img src="img/exit.png" style="width:25px;height:25px;">
+									<span>&nbsp;Exit</span>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td style=" height: 35px;width: 100px;background-color:#556270;" colspan="2">
+								<strong>欢迎：</strong></strong>admin
+							</td>
+						</tr>
+					</table>
+					<!--此处的css未完成！-->
+				</td>
+			</tr>
+			<!-- -------------------------------------------------------------------------------------- -->
+			<!-- 以下是功能区--------------------------------------------------------------------------- -->
+			<tr>
+				<td id="Td1"><a href="javascript:showinfor()">报修管理</a></td>
+
+
+				<td style="background-color:#dbe6f4 ;" colspan="6" rowspan="12" class="td1">
+					<!-- 功能对应的HTML网页 -->
+
+					<!-- 查看维修信息 -->
+					<div id="page1" style="display:block;">
+						<iframe src="admin/inginfor?p=1" frameborder="0" leftmargin="0"></iframe>
+					</div>
+
+					<!-- 查看报销单 -->
+					<div id="page2" style="display:none;">
+						<iframe src="admin/billlist?p=1" frameborder="0" leftmargin="0"></iframe>
+					</div>
+
+					<!-- 查看用户信息 -->
+					<div id="page3" style="display:none;">
+						<iframe src="admin/userlist?p=1" frameborder="0" leftmargin="0"></iframe>
+					</div>
+
+					<!-- 查看工人信息 -->
+					<div id="page4" style="display:none;">
+						<iframe src="admin/listworkers?p=1" frameborder="0" leftmargin="0"></iframe>
+					</div>
+
+					<!--&lt;!&ndash; 搜索用户 &ndash;&gt;
+					<div id="page5" style="display:none;">
+						<iframe src="A_seachuser.html" frameborder="0" leftmargin="0"></iframe>
+					</div>-->
+
+					<!-- 添加用户 -->
+					<div id="page6" style="display:none;">
+						<iframe src="A_AddUser.html" frameborder="0" leftmargin="0"></iframe>
+					</div>
+
+					<!-- 异常维修信息 -->
+					<div id="page7" style="display:none;">
+						<iframe src="admin/failinfor?p=1" frameborder="0" leftmargin="0"></iframe>
+					</div>
+
+					<!-- 设备管理-->
+					<div id="page8" style="display:none;">
+						<iframe src="admin/equipmentlist?p=1" frameborder="0" leftmargin="0"></iframe>
+					</div>
+
+					<!-- 公告栏管理-->
+					<div id="page9" style="display:none;">
+						<iframe src="admin/noticelist?p=1" frameborder="0" leftmargin="0"></iframe>
+					</div>
+					<!-- 数据管理-->
+					<div id="page10" style="display:none;">
+						<iframe src="Canves/newpages5.html" frameborder="0" leftmargin="0"></iframe>
+					</div>
+					<!-- 功能对应的HTML网页 -->
+				</td>
+			</tr>
+			<!-- 要添加功能，注意修改rowspan的值 -->
+			<tr id="lookinfor" style="display: none;">
+				<td id="td1" style=" text-align: left;"><a href="javascript:showpage(1)">&nbsp;维修信息</a></td>
+			<tr id="billlist" style="display: none;">
+				<td id="td2" style="text-align: left;"><a href="javascript:showpage(2)">&nbsp;报修单</a></td>
+			</tr>
+			<tr id="errorinfor" style="display: none;">
+				<td id="td7" style="text-align: left;"><a href="javascript:showpage(7)">&nbsp;异常维修</a></td>
+			</tr>
+			<tr>
+				<td id="Td2"><a href="javascript:showuser()">用户管理</a></td>
+			</tr>
+			<tr id="userinfor" style="display: none;">
+				<td id="td3" style="text-align: left;"><a href="javascript:showpage(3)">&nbsp;用户信息</a></td>
+			</tr>
+			<tr id="workerinfor" style="display: none;">
+				<td id="td4" style="text-align: left;"><a href="javascript:showpage(4)">&nbsp;工人信息</a></td>
+			</tr>
+			<tr id="adduser" style="display: none;">
+				<td id="td6" style="text-align: left;"><a href="javascript:showpage(6)">&nbsp;添加用户</a></td>
+			</tr>
+			<tr>
+				<td id="data"><a href="javascript:showdata()">数据分析</a></td>
+			</tr>
+			<tr>
+				<td id="Td3"><a href="javascript:showequipment()">设备管理</a></td>
+			</tr>
+			<tr>
+				<td id="Td4"><a href="javascript:shownotice()">公告管理</a></td>
+			</tr>
+			<tr>
+				<td><strong>更多功能，敬请期待...</strong></td>
+			</tr>
+			<tr id="NULL1" style="display: block;">
+				<td></td>
+			</tr>
+			<tr id="NULL2" style="display: block;">
+				<td></td>
+			</tr>
+			<tr id="NULL3" style="display: block;">
+				<td></td>
+			</tr>
+		</table>
+	</center><!--  -->
+</body>
+
+</html>

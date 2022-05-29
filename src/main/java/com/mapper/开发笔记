@@ -1,0 +1,72 @@
+
+
+
+				const res = await this.$myrequst({
+					url:'user/login',
+					data: {
+						"userid": this.userid,
+						"password": this.password,
+						"openid": this.openid
+					}
+
+				})
+				console.log(res.data);
+				
+“uni.navigateTo是不支持跳tabbar的页面的”
+
+uni.getStorageInfo({
+    success: function (res) {
+        console.log(res.keys);
+        console.log(res.currentSize);
+        console.log(res.limitSize);
+    }
+});
+
+ console.log(this.globalData.name) //app.vue页面  
+ console.log(this.$options.globalData.name) //app.vue页面，调用方法也是用这个
+ console.log(getApp().globalData.name)  //其他页面
+ getApp().globalData.name='123' //赋值
+ getApp().globalData.user = Object.assign({},that.userinfo )
+ 
+ 
+ uni.showToast({
+    title: '标题',
+    duration: 2000
+});
+
+uni.showModal({
+    title: '提示',
+    content: '这是一个模态弹窗',
+    success: function (res) {
+        if (res.confirm) {
+            console.log('用户点击确定');
+        } else if (res.cancel) {
+            console.log('用户点击取消');
+        }
+    }
+});
+
+header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+	  
+	  
+if (options.method) {
+				options.method = options.method.toUpperCase(); //小写改为大写
+				if (method == "POST") {
+					header = {
+						'content-type': "application/x-www-form-urlencoded"
+					};
+				} else {
+					header = {
+						'content-type': "application/json"
+					};
+				}
+			},
+			
+接收post提交数据
+			
+    public Message test3(@RequestBody JSONObject jsonObject){
+        String userid=jsonObject.get("userid").toString();
+        String oldpassword=jsonObject.get("oldpassword").toString();
+        String newpassword=jsonObject.get("newpassword").toString();

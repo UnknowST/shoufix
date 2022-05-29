@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>发布报修</title>
+	<script src="Js/jquery-3.3.1.js"></script>
+	<script src="Js/finduser.js"></script>
+	<script src="Js/uploadimag.js"></script>
+
+	<style>
+		p {
+			text-align: center;
+		}
+	</style>
+	<!--修改-->
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		.upBox {
+			border: solid #556270;
+			border-radius: 20px;
+			background-color: #dbe6f4;
+			width: 600px;
+		}
+
+		#inputBox {
+			width: 20px;
+			height: 20px;
+			border: 1.5px solid;
+			color: #1296db;
+			border-radius: 20px;
+			position: relative;
+			text-align: center;
+			line-height: 40px;
+			overflow: hidden;
+			font-size: 16px;
+			float: left;
+		}
+
+		#inputBox input {
+			width: 100%;
+			height: 40px;
+			opacity: 0;
+			cursor: pointer;
+			position: absolute;
+			top: 0;
+			left: -14%;
+
+		}
+
+		#imgBox {
+			text-align: left;
+		}
+
+		.imgContainer {
+			display: inline-block;
+			width: 32%;
+			height: 150px;
+			margin-left: 1%;
+			border: 1px solid #666666;
+			position: relative;
+			margin-top: 30px;
+			box-sizing: border-box;
+		}
+
+		.imgContainer img {
+			width: 100%;
+			height: 150px;
+			cursor: pointer;
+		}
+
+		.imgContainer p {
+			position: absolute;
+			bottom: -1px;
+			left: 0;
+			width: 100%;
+			height: 30px;
+			background: black;
+			text-align: center;
+			line-height: 30px;
+			color: white;
+			font-size: 16px;
+			font-weight: bold;
+			cursor: pointer;
+			display: none;
+		}
+
+		.imgContainer:hover p {
+			display: block;
+		}
+
+		#btn {
+			outline: none;
+			width: 100px;
+			height: 30px;
+			background: cornflowerblue;
+			border: 1px solid cornflowerblue;
+			color: white;
+			cursor: pointer;
+			margin-top: 30px;
+			border-radius: 5px;
+		}
+	</style>
+</head>
+
+<body>
+	<br><br>
+	<center>
+
+		<div class="upBox">
+			<!-- 第一行 -->
+			<div
+				style="background-color: #556270;height: 70px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+				<div style="float: left;font-weight: bolder;margin-top: 17px;margin-left: 18px;font-size: 30px;">
+					请填写维修详情：
+				</div>
+			</div>
+			<!-- 第二行 -->
+			<div>
+				<br>
+				<div class="notice">
+					<script src="Js/address.js"></script>
+					<script src="Js/fault_type.js"></script>
+					<script>
+						$(function () {
+
+
+							//获取装备表的数据
+							$.ajax({
+								url: 'worker/equipmentlist',
+								type: 'get',
+								dataType: 'json',
+								async: false,
+								success: function (list) {
+									kai = '<select id="equip"><option value="-1">--请选择维修设备--</optin>'
+
+									var zh = " "
+									var wei = '</select>'
+									for (var i = 0; i < list.length; i++) {
+										zh += '<option value="' + list[i].eqname + '">' + list[i].eqname + '</option>'
+									}
+									$("#sp1").html(kai + zh + wei);
+								}
+							})
+
+
+
+							var kai = "<select id='place'>"
+							var wei = "</select>"
+							var li = " ";
+							//获取楼号
+							for (var i = 0; i < address.length; i++) {
+								li += '<option>' + address[i].name + '</option>'
+							}
+							$("#place").html(kai + li + wei);
+							$("#place").change(function () {
+								//获取name
+								var name = $("#place option:selected").text();
+								var kai1 = '<select id="area">';
+								var wei1 = '</select>';
+								var l2 = " ";
+								var kai2 = '<select id="h_num">'
+								var wei2 = '</select>';
+								var li3 = " ";
+								for (var i = 0; i < address.length; i++) {
+
+									if (address[i].name == name) {
+										for (var j = 0; j < address[i].place.length; j++) {
+											l2 += '<option>' + address[i].place[j].name + '</option>'
+											for (var k = 0; k < address[i].place[0].area.length; k++) {
+												li3 += '<option>' + address[i].place[j].area[k] + '</option>'
+											}
+										}
+									}
+
+									$("#area").html(kai1 + l2 + wei1);
+									$("#h_number").html(kai2 + li3 + wei2)
+								}
+							})
+							$("#area").change(function () {
+								//获取楼层
+								var floor = $("#area option:selected").val();
+								var name = $("#place option:selected").text();
+								var kai2 = '<select id="h_num">'
+								var wei2 = '</select>';
+								var li3 = " ";
+								for (var i = 0; i < address.length; i++) {
+
+									if (address[i].name == name) {
+										for (var j = 0; j < address[i].place.length; j++) {
+											if (address[i].place[j].name == floor) {
+												for (var k = 0; k < address[i].place[j].area.length; k++) {
+													li3 += '<option>' + address[i].place[j].area[k] + '</option>'
+												}
+											}
+										}
+									}
+								}
+
+								$("#h_number").html(kai2 + li3 + wei2)
+							})
+
+
+
+							$("#equip").change(function () {
+								var kai2 = '<select id="type">'
+								var wei2 = '</select>';
+								var li4 = " ";
+								var text = $("#equip option:selected").text();
+
+
+								for (var i = 0; i < type.length; i++) {
+									if (type[i].name == text) {
+										for (var j = 0; j < type[i].type.length; j++) {
+											li4 += '<option>' + type[i].type[j] + '</option>'
+										}
+									}
+								}
+
+								$("#type").html(li4)
+							})
+
+
+						})
+					</script>
+					<script>
+						function noshow() {
+							var T = document.getElementById("detail").value;
+							if (T == "请详细描述设备故障：")
+								document.getElementById("detail").innerText = "";
+
+						}
+						function show() {
+							var T = document.getElementById("detail").value;
+							if (T == "")
+								document.getElementById("detail").innerText = "请详细描述设备故障：";
+						}
+
+					</script>
+					<ul id="ul1">
+						<div>
+							<form id="f1" method="post" enctype="multipart/form-data">
+								<div style="float: left;">&nbsp;&nbsp;维修地点：&nbsp;&nbsp;
+									<!-- <input style="width:170px; height:20px" type="text" name="textfield1" id="place" />-->
+									<span id="place"></span> <span id="area"></span> <span id="h_number"></span>
+								</div><br><br>
+								<div style="float: left;">&nbsp;&nbsp;维修设备：&nbsp;&nbsp;
+									<!-- <input style="width:170px; height:20px" type="text" name="textfield1" id="equip" />-->
+									<span id="sp1"></span>
+								</div><br><br>
+								<div style="float: left;">&nbsp;&nbsp;故障类型：&nbsp;&nbsp;
+									<!-- <input style="width:170px; height:20px" type="text" name="textfield1" id="equip" />-->
+									<span id="sp2"><select id="type">
+											<option>--故障类型--</option>
+										</select></span>
+								</div><br><br>
+
+								<div style="float: left;">&nbsp;&nbsp;故障描述：</div>
+								<textarea text-align="center"
+									style="vertical-align:top; height: 100px; width: 82%;font-style:italic" id="detail"
+									onblur="show()" onfocus="noshow()">请详细描述设备故障：</textarea><br>
+
+								<br>
+								<div style="float: left;margin-top: 5px;">&nbsp;&nbsp;&nbsp;<a
+										style="font-size: 16px;">图片描述：</a></div>
+								<div id="inputBox">
+									<input type="file" title="添加图片" id="file" name="file" multiple
+										accept="image/png,image/jpg,image/gif,image/JPEG" />
+									<img src="img/addimg.png" style=" margin-bottom: 7px;width: 20px;height: 20px;">
+								</div>
+								<div id="imgBox"
+									style="width: 100%;height:auto;min-height: 200px; border-top: solid #556270;border-top-left-radius: 10px;border-top-right-radius: 10px;">
+								</div><br>
+								<button id="btn1"
+									style="width: 100px;height: 30px;font-weight: bolder;">确认发布</button><br><br>
+
+							</form>
+						</div>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+		</div>
+		<script type="text/javascript">
+			imgUpload({
+				inputId: 'file', //input框id
+				imgBox: 'imgBox', //图片容器id
+				buttonId: 'btn1', //提交按钮id
+				upUrl: 'user/upfile',  //提交地址
+				data: 'file' //参数名
+			})
+
+			//选择图片
+			function imgUpload(obj) {
+				var oInput = '#' + obj.inputId;
+				var imgBox = '#' + obj.imgBox;
+				var btn = '#' + obj.buttonId;
+				$(oInput).on("change", function () {
+					var fileImg = $(oInput)[0];
+					var fileList = fileImg.files;
+					for (var i = 0; i < fileList.length; i++) {
+						var imgSrcI = getObjectURL(fileList[i]);
+						imgName.push(fileList[i].name);
+						imgSrc.push(imgSrcI);
+						imgFile.push(fileList[i]);
+					}
+					addNewContent(imgBox);
+				})
+				$(btn).on('click', function () {
+
+
+					var data = new Object;
+					//var data={}
+					//var data=new FormData;
+					//data.append("file",imgFile)
+					data[obj.data] = imgFile;
+					submitPicture(obj.upUrl, data);
+
+
+				})
+
+			}
+
+			function submitPicture(url, data) {
+
+				var formData = new FormData();
+				$.each(imgFile, function (i, file) {
+					formData.append('file', file);
+				});
+				formData.append("userid", getuser().userid);
+				/*改变*/
+				formData.append("floor", $("#place option:selected").text())
+				formData.append("layer", $("#area option:selected").text())
+				formData.append("h_number", $("#h_num").val())
+				formData.append("equip", $("#equip").val())
+				formData.append("reason", $("#type option:selected").text())
+				formData.append(("detail"), $("#detail").val())
+				console.log(formData)
+				$.ajax({
+					type: "post",
+					url: url,
+					async: false,
+					data: formData,
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function (message) {
+						if (message.flag == 1) {
+							alert(message.message);
+						} else {
+							alert(message.message);
+						}
+					}
+
+				})
+
+
+			}
+		</script>
+	</center>
+	<!-- 。//////////////////////////////////////////////////////////////// -->
+
+</body>
+
+</html>

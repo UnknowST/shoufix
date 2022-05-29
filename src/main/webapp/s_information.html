@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>修改个人信息</title>
+	<!--提交数据的代码-->
+	<script src="Js/jquery-3.3.1.js"></script>
+	<script src="Js/finduser.js"></script>
+	<script>
+
+
+		$(function () {
+			//读取原始数据
+			$("#name").val(getuser().name)
+			//$("#phone").val(getuser().phone)
+			$("#mail").val(getuser().mail)
+			$("#collage").find('option[value=' + getuser().collage + ']').attr("selected", true);
+			$('input[value="' + getuser().gender + '"]').prop("checked", true);
+			$("#change").click(function () {
+
+				$.ajax({
+					url: 'user/update',
+					type: 'post',
+					data: { gender: $('input:radio[name="gender"]:checked').val(), collage: $("#collage").val(), name: $("#name").val(), phone: getuser().phone, mail: $("#mail").val(), num: getuser().num },
+					dataType: 'json',
+					async: false,
+					success: function (message) {
+						if (message.flag == 1) {
+							alert(message.message);
+							window.history.go(0);
+						} else alert(message.message);
+					}
+				})
+
+			})
+
+
+
+
+
+		})
+
+	</script>
+	<style>
+		p {
+			text-align: center;
+
+		}
+
+		div {
+			text-align: center;
+
+		}
+
+		.upBox {
+			/* 
+			
+			*/
+			border: solid #556270;
+			border-radius: 20px;
+			background-color: #dbe6f4;
+			width: 600px;
+		}
+	</style>
+</head>
+
+<body>
+	<br><br> <br><br> <br><br>
+	<center>
+		<div class="upBox">
+			<!-- 第一行 -->
+			<div
+				style="background-color: #556270;height: 70px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+				<div style="font-weight: bolder;margin-left: 18px;font-size: 30px;">
+					修 改 个 人 信 息
+				</div>
+			</div>
+			<!-- 第二行 -->
+			<div>
+				<br>
+				<div class="notice">
+					<ul id="ul1">
+						<div>
+							<form id="for1" style="display: block">
+								<center>
+
+									<table>
+										<!-- 性别 -->
+										<tr>
+											<td>性别：</td>
+											<td>男<input type="radio" id="gender" name="gender"
+													value="M">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												女<input type="radio" id="gender" name="gender" value="W"></td>
+										</tr>
+										<tr style="height: 15px;">
+											<td></td>
+										</tr>
+										<!-- 学院 -->
+										<tr>
+											<td>学院：</td>
+											<td>
+												<select style="width:180px; height:28px" name="collage" id="collage">
+													<option name="col" value="0"></option>
+													<option name="col" value="信息学院">信息学院</option>
+													<option name="col" value="经管学院">经管学院</option>
+													<option name="col" value="食品学院">食品学院</option>
+													<option name="col" value="水产与生命学院">水产与生命学院</option>
+													<option name="col" value="外国语学院">外国语学院</option>
+													<option name="col" value="马克思主义学院">马克思主义学院</option>
+													<option name="col" value="海洋科学学院">海洋科学学院</option>
+													<option name="col" value="海洋生态与环境学院">海洋生态与环境学院</option>
+													<option name="col" value="工程学院">工程学院</option>
+													<option name="col" value="海洋文化与法律学院">海洋文化与法律学院</option>
+													<option name="col" value="爱恩学院">爱恩学院</option>
+													<option name="col" value="体育部">体育部</option>
+													<option name="col" value="继续教育学院">继续教育学院</option>
+													<option name="col" value="国际文化交流学院">国际文化交流学院</option>
+
+												</select>
+											</td>
+										</tr>
+										<tr style="height: 20px;">
+											<td></td>
+										</tr>
+
+										<!-- 姓名 -->
+										<tr>
+											<td>姓名：</td>
+											<td><input type="text" id="name" style="width:170px; height:20px"></td>
+										</tr>
+										<tr style="height: 20px;">
+											<td></td>
+										</tr>
+
+										<!-- 邮箱 -->
+										<tr>
+											<td>邮箱：</td>
+											<td><input style="width:170px; height:20px" type="text" name="textfield3"
+													id="mail" /></td>
+										</tr>
+									</table>
+
+								</center>
+								<br>
+
+								<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<input style="width:100px; height:30px; font-family: 微软雅黑; font-size:20px;"
+										name="change" type="submit" id="change" value="确认修改" />
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<input style="width:100px; height:30px ;font-family: 微软雅黑; font-size:20px;"
+										name="reset" type="submit" id="reset" value="重置信息" />
+
+									&nbsp;&nbsp;
+								</p>
+							</form>
+						</div>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- .///////////////////////////////////////////. -->
+
+	</center>
+
+	</div>
+</body>
+
+</html>

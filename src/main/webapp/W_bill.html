@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>bill</title>
+    <script src="Js/jquery-3.3.1.js"></script>
+    <script src="Js/finduser.js"></script>
+    <script>
+        $(function () {
+            //先获取到最后一个订单号
+            $.ajax({
+                url: 'worker/bill_num',
+                type: 'get',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+
+                    $("#sp1").html(data + 1);
+                    $("#btn2").click(function () {
+                        $.ajax({
+                            url: 'worker/insertbill',
+                            data: { "num": data + 1, "cost": $("#cost").val(), "place": $("#place").val(), "useing": $("#useing").val(), "workerid": getworker().userid },
+                            type: 'post',
+                            dataType: 'json',
+                            async: false,
+                            success: function (message) {
+                                if (message.flag == 1) {
+                                    alert(message.message),
+                                        window.history.go(0);
+
+                                } else alert(message.message);
+                            }
+                        })
+                    })
+
+                }
+            })
+            //获取到用户填写的数据
+
+        })
+    </script>
+    <style>
+        .upBox {
+            border: solid #556270;
+            border-radius: 20px;
+            background-color: #dbe6f4;
+            width: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <br><br> <br><br>
+    <center>
+        <div class="upBox">
+            <!-- 第一行 -->
+            <div
+                style="background-color: #556270;height: 70px;border-top-left-radius: 15px;border-top-right-radius: 15px;">
+                <div style="float: left;font-weight: bolder;margin-top: 17px;margin-left: 18px;font-size: 30px;">
+                    ※填报出库单
+                </div>
+            </div>
+            <!-- 第二行 -->
+            <div>
+                <br>
+                <div class="notice">
+                    <ul id="ul1">
+                        <form>
+                            <table align="center">
+                                <tr>
+                                    <td>报销单号:</td>
+                                    <td><span id="sp1"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>金额:</td>
+                                    <td><input type="number" id="cost"></td>
+                                </tr>
+                                <tr>
+                                    <td>地点:</td>
+                                    <td><input type="text" id="place"></td>
+                                </tr>
+                                <tr>
+                                    <td>用途:</td>
+                                    <td><input type="text" id="useing"></td>
+                                </tr>
+                                <tr>
+                                    <td align="center" colspan="2">
+                                        <input style="width: 100px;height: 30px;" type="reset" id="btn1" value="重填信息">
+                                        <input style="width: 100px;height: 30px;" type="button" id="btn2" value="提交订单">
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- .///////////////////////////////////////////. -->
+
+    </center>
+    <!-- ///////////////////////////////////////////// -->
+
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html>
+<meta charset="UTF-8">
+
+<head>
+    <style>
+        .canvasjs-chart-tooltip {
+            pointer-events: auto !important;
+        }
+    </style>
+    <script type="text/javascript" src="../Js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../Js/jquery.canvasjs.min.js"></script>
+    <script src="../Js/BackData.js"></script>
+    <script src="../Js/finduser.js"></script>
+    <script>
+        $(function () {
+            //获取参数
+            var num = getnum('num');
+
+            //获取报修数据
+            var floordata = backfloor();
+            //console.log(floordata);
+            var options = {
+                animationEnabled: true,
+                theme: "light2",
+                zoomEnabled: true,
+                title: {
+                    text: '' + floordata[num].floor + '报修数据'
+                },
+                axisX: {
+                    valueFormatString: "维修类型",
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                axisY: {
+                    title: "报修次数",
+                    crosshair: {
+                        enabled: true
+                    },
+                    includeZero: true
+                },
+                toolTip: {
+                    shared: true,
+                },
+                legend: {
+                    cursor: "pointer",
+                    verticalAlign: "bottom",
+                    horizontalAlign: "left",
+                    dockInsidePlotArea: true,
+
+                },
+                data: [
+                    {
+                        type: "column", //change it to column, spline, line, pie, etc
+                        toolTipContent: null,
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+
+
+            for (var i = 0; i < floordata[num].listmap.length; i++) {
+                options.data[0].dataPoints.push({ label: floordata[num].listmap[i].key, y: parseInt(floordata[num ].listmap[i].value) })
+            }
+
+            $("#chartContainer").CanvasJSChart(options);
+
+        })
+    </script>
+    <style>
+        .a{
+            font-family: "Montserrat", sans-serif;
+                        font-size: 14px;
+                        font-weight: 600;
+                        letter-spacing: 1px;
+                        display: inline-block;
+                        padding: 10px 32px;
+                        border-radius: 50px;
+                        transition: 0.5s;
+                        margin: 0 20px 20px 0;
+                        background-color: #4a8bfe;
+                        color:aliceblue;
+                        
+        }
+        img{
+            width: 30px;
+        }
+    </style>
+    <script>
+        function back(){
+        history.go(-1);
+    }
+    </script>
+</head>
+
+<body>
+    
+    <a style="float: right;margin-right: 20px;text-decoration: none;font-weight: bolder;"  href="javascript:back()">返回上一级<img src="../img/return.png" alt=""></a>
+    <div style="height: 50px;"></div>
+    <div id="chartContainer" style="width:100%; height:280px;"></div>
+    <script type="text/javascript" src="../Js/canvasjs.min.js"></script>
+</body>
+
+</html>

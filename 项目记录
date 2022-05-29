@@ -1,0 +1,189 @@
+项目可以成功运行
+mapper配置文件中取别名只用使用权限名
+
+之后需要探索怎么实现controller和ajax结合使用
+
+使用maven集成tomcat7后 jsp的标签库不能解析
+使用maven集成tomcat8失败
+
+还是老老实实发布到tomcat8吧
+
+controller和html ajax的交互成功
+前台传输数据的方法
+    前台传输数据到后台直接采用ajax传输json格式数据的方式
+后台传输数据到前台因为是静态页面 所以只能采取json格式或者是string文本的方式
+        因为我在后台集成了一个总的Controller类
+        之后的所有Conroller都应该继承该方法 总controller方法中主要放的就是json数据的方法，所以这也间接的完成了后台数据到前台数据的传输
+        原本controller与前台数据最好的结合方式就是利用jsp的标签库 这样就不用在后台先把数据json化再传到前台
+
+问题：
+    现在前台用html的话 文件的传输貌似又不是那么的方便了
+    可以寻找springmvc自动返回json格式数据的方法
+    @ResponseBody 注解使得springmvc框架默认返回json数据
+     这个方式与html的结合更友好
+
+接下来就是具体后台代码的编写
+
+登录模块的实现需要session保存登录成功的用户的信息
+现在害使用了一个Message实体类来记录数据交互过程中返回的各种状态，
+带时候应该还需要一个具体的方法来返回用户的信息
+根据面向对象的原则在user类中 我应该声明Infor类 但是在infor类中我又声明了replay类 所以这在进行mybatis查询时可能
+比较麻烦 但是跟jdbctemplate比较起来已经很方便了
+
+后面需要具体实现的就是图片上传
+
+
+ //图片上传预览已经实现 输出文件流到后台还没实现
+ //外部js函数中的变量一定要初始化并且赋初始值不然拿到的结果就是undefined
+ //全面向对象的话数据库需要重新设计 现在采取一部分结合就好了
+
+ //    $("div").find('table').remove(); 删除div下的table
+ //    $("table").find('tr').remove(); 删除table下的tr
+//    <a href="infordetail.html?num="'+list[i].num+'">修改信息</a>
+//mybatis多参数传递
+ <update id="modif_pass" >
+        update user set password=#{param2} where userid=#{param1}
+    </update>
+
+
+    <!--自动返回主键-->
+        <insert id="insertinfor" parameterType="infor"  >
+            insert into infor(place,equip,detail,userid,imagepath) values(#{place},#{equip},#{detail},#{userid},#{imagepath})
+            <selectKey keyProperty="num" resultType="int">
+                select LAST_INSERT_ID() as num
+            </selectKey>
+        </insert>
+
+        //获取单选按钮的值
+         var fenshu=$('input:radio[name="fenshu"]:checked').val();
+             <link rel="stylesheet" type="text/css" href="css/popup.css" />//引入css
+
+        mybatis 遇到未知的错误
+        //工人的功能 和用户修改基本信息的功能还没有实现
+
+        先实现管理员的功能吧
+
+
+        //重要注意点 在controller中出现空指针异常的原因
+        在controller中调用service的实现类是 要用自动注入
+
+        //查询某一个工人的待维修报修单数 还需要修改
+        //基本思路  根据账号直接去infor表中查找
+
+                //选出所有的超链接
+                 var obj = document.getElementById("div1").getElementsByTagName("a")
+
+                            for (var j = obj.length - 1; j >= 0; j--) {
+
+                                obj[j].onclick = function () {
+                                    num = list[this.id].cid;
+
+                                    var statu=$("#stu option:selected").text();   //有问题
+                                    alert(statu)
+                                        $.ajax({
+                                        url:"operation/Reinfor",
+                                        type:"post",
+                                        data:{"num":num,"statu":statu,"workerid":list[this.id].workerid,"userid":list[this.id].userid},
+                                        dataType:"json",
+                                        async: false,
+                                        success:function (data) {
+                                            if(data.flag==0) alert(data.errorMsg);
+                                            else {
+                                                alert("回复成功!");
+                                                window.history.go(0)    //刷新页面
+                                            }
+
+                                        }
+
+
+                                    })
+                                }
+
+                            }
+
+
+                数据表 infor的状态分的不够细致 应该还添加一个字段为待师傅接单
+                 那么正在维修中的订单就应该是不能修改的
+                 用户只能再报修单还是待分配状态的时候才能修改
+                 关于工人查看报修的时候就比较注重待维修的
+
+                 //分配维修任务哪里还有  见面话不够友好 不能实时的显示出当前工人的待维修单数
+                    //html跳转后台 和访问后台的时候 不需要加/ 例如 admin/userlist admin前面不需要加/ 要是加了的话 就会自动省去项目的名称
+    //条件搜索语句
+        <select id="searchuser" parameterType="user" resultType="user">
+            select * from user
+            <where>
+                <if test="userid!=null and userid!=''">
+                    and userid=#{userid}
+                </if>
+                <if test="collage!=null and collage!= ''">
+                    and collage=#{collage}
+                </if>
+                <if test="phone!=null and phone!=''">
+                    and phone=#{phone}
+                </if>
+            </where>
+        </select>
+        //注意判断字符是否为空的方式 单冒号之间没有空格
+
+        //项目改进需要
+        。。分别查询对应状态的infor记录 然后分页显示
+
+        //维修流程
+        用户填写维修单  此时的状态就是待分配
+        管理员分配维修单之后 显示的是待维修
+        工人接到维修单之后 点击确认后显示的应该是正在维修
+        工人完成维修之后 维修状态显示为已完成维修
+
+    //判断中文的方式  单引号引上中文
+    <c:choose>
+       <c:when test="${infor.state == '待维修'}"></c:when>
+    </c:choose>
+
+    //表关联查询的时候 会出现死循环的结果 所以使用mybatis的懒加载模式 分步查询
+    //最后发现循环查询不是因为mybatis的原因 而是controller的原因 。。。。cao
+    //事实证明断点测试是个好东西
+    //为了防止查询的时候 在出现空的情况下 workerid就变为空 影响之后的查询 所以在后台生成一个单独的字段来保存id
+    //日期格式 即使用了spring的格式化注解 但是输出到页面还是不正确 所以还需要修改
+    //现阶段写道了 管理员查看infor记录  主要是考虑查看详细信息是否需要转到一个新的页面去
+    //该有任务分配的具体实现方式
+    //删除记录页面跳转哪里 还需要再做一个判断 不然会跳到一个数据没有的页面
+    //tr隐藏操作 还需要设置
+    //搜索bill哪里 点击下一页有错误
+    //登录拦截器待完成
+    //上传文件的路径完全解决
+    //多图上传问题解决
+    //xml文件中特殊符号的写法
+   第一种写法（1）：
+
+   原符号       <        <=      >       >=       &        '        "
+   替换符号    &lt;    &lt;=   &gt;    &gt;=   &amp;   &apos;  &quot;
+   例如：sql如下：
+   create_date_time &gt;= #{startTime} and  create_date_time &lt;= #{endTime}
+
+   第二种写法（2）：
+   大于等于 <![CDATA[ >= ]]>
+   小于等于 <![CDATA[ <= ]]>
+   例如：sql如下：
+   create_date_time <![CDATA[ >= ]]> #{startTime}
+   and  create_date_time <![CDATA[ <= ]]> #{endTime}
+
+   <!--        <collection property="imagepaths" ofType="string" javaType="list" >
+               &lt;!&ndash; 这里使用构造方法注入，String 没有属性&ndash;&gt;
+               <constructor>
+                   <arg column="imagepath"/>
+
+               </constructor>
+           </collection>-->
+       //解决图片数量动态变化的问题 接下来就是输出图片
+       //订单完成双向认证
+       //完成装备表的问题
+       //完成登录页面滚动的维修公告问题
+       //解决注册信息还不够详细的问题 ---还待商榷
+       //解决用户修改基本信息 进入死循环的问题
+       //双向认证订单 需要变化装备数据的信息
+       //mybatis sql注入数据找不到数据的时候 在mapper文件中对参数进行@Param注解
+       //js中需要jstl中的值跟js中的变量比较的时候对jstl的值打上双冒号或但冒号就可以
+
+       //最后两个问题 用话查看最终已经确认的维修信息
+       //修改维修申报记录的时候图片怎么处理

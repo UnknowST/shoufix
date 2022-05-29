@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <style>
+        .canvasjs-chart-tooltip {
+            pointer-events: auto !important;
+        }
+    </style>
+    <script type="text/javascript" src="../Js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../Js/jquery.canvasjs.min.js"></script>
+    <script src="../Js/BackData.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            var options = {
+                animationEnabled: true,
+                theme: "light2",
+                width: 850,
+                height: 400,
+                backgroundColor: "aliceblue",
+                zoomEnabled: true,
+                title: {
+                    text: "各小区修数量"
+                },
+                axisX: {
+                    valueFormatString: "小区名称",
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                axisY: {
+                    title: "报修数量",
+                    crosshair: {
+                        enabled: true
+                    }
+                },
+
+                toolTip: {
+                    shared: true,
+                    contentFormatter: function (e) {
+                        var content = " ";
+                        for (var i = 0; i < e.entries.length; i++) {
+                            var kai = " ";
+                            var li = " ";
+                            for (var k = 0; k < floordata.length; k++) {
+                                if (floordata[k].floor == e.entries[i].dataPoint.label) {
+                                    kai = '<a  style="color: cornflowerblue;" href = "newpages2.html?num=' + k + '" id="a' + k + '" > 详细信息</a><hr/>'
+                                    for (var j = 0; j < floordata[k].listmap.length; j++) {
+
+                                        li += '' + floordata[k].listmap[j].key +
+                                            ':' + floordata[k].listmap[j].value + '<br/></hr>'
+                                    }
+                                }
+                            }
+                            var wei = '总计:' + e.entries[i].dataPoint.y + ''
+
+                        }
+                        content = kai + li + wei;
+
+                        return content;
+                    }
+                },
+                legend: {
+                    cursor: "pointer",
+                    verticalAlign: "bottom",
+                    horizontalAlign: "left",
+                    dockInsidePlotArea: true,
+
+                },
+                data: [
+                    {
+                        type: "line", //change it to column, spline, line, pie, etc
+                        toolTipContent: null,
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+            var floordata = backfloor();
+            var maxsum = minsum = floordata[0].sum;
+            var maxfloor = minfloor = "";
+            for (var i = 0; i < floordata.length; i++) {
+                if (floordata[i].sum > maxsum) {
+                    maxsum = floordata[i].sum;
+                }
+                if (floordata[i].sum < minsum) {
+                    minsum = floordata[i].sum;
+                }
+            }
+            for (var i = 0; i < floordata.length; i++) {
+                if (floordata[i].sum == maxsum) {
+                    maxfloor +="["+floordata[i].floor + ":" + floordata[i].sum + ";" + "]";
+                }
+                if (floordata[i].sum == minsum) {
+                    minfloor +="["+floordata[i].floor + ":" + floordata[i].sum + ";" + "]";
+                }
+                options.data[0].dataPoints.push({ label: floordata[i].floor, y: parseInt(floordata[i].sum) })
+            }
+            document.getElementById("chartContainer0max").innerText = maxfloor;
+            document.getElementById("chartContainer0min").innerText = minfloor;
+            $("#chartContainer0").CanvasJSChart(options);
+            /*下一个图表 设备维修数据图*/
+            var option1 = {
+                animationEnabled: true,
+                theme: "light2",
+                /* 这里是宽高的设置 */
+                width: 850,
+                height: 400,
+                backgroundColor: "aliceblue",
+                zoomEnabled: true,
+                title: {
+                    text: "各设备修数量"
+                },
+                data: [
+                    {
+                        type: "pie", //change it to column, spline, line, pie, etc
+                        startAngle: 45,
+                        showInLegend: "true",
+                        legendText: "{label}",
+                        indexLabel: "{label} ({y})",
+                        yValueFormatString: "#,##0.#" % "",
+
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+
+            /*添加数据*/
+            var equipdata = backequip();
+            var min = max = equipdata[0].value;
+            var sumvalue = 0;
+            var evalsumvalue = 0;
+            var mininfor = "";
+            var maxinfor = "";
+            for (var i = 0; i < equipdata.length; i++) {
+
+                if (equipdata[i].value > max) {
+                    max = equipdata[i].value;
+                }
+                if (equipdata[i].value < min) {
+                    min = equipdata[i].value;
+                }
+
+            }
+
+            for (var i = 0; i < equipdata.length; i++) {
+                if (equipdata[i].value == max) {
+                    maxinfor += equipdata[i].key + ":" + equipdata[i].value + ";";
+                }
+                if (equipdata[i].value == min) {
+                    mininfor += equipdata[i].key + ":" + equipdata[i].value + ";";
+                }
+                option1.data[0].dataPoints.push({ label: equipdata[i].key, y: parseInt(equipdata[i].value) });
+
+            }
+            document.getElementById("chartContainer1maxnum").innerText = maxinfor;
+            document.getElementById("chartContainer1minnum").innerText = mininfor;
+
+
+            $("#chartContainer1").CanvasJSChart(option1);
+
+
+            /*工人评分排行图*/
+            var rank = workerrank();
+
+
+            var option2 = {
+                animationEnabled: true,
+                width: 850,
+                height: 400,
+                backgroundColor: "aliceblue",
+                theme: "light2",
+
+                zoomEnabled: true,
+                title: {
+                    text: "维修师傅评分排行"
+                },
+                axisX: {
+                    title: "姓名",
+                    titleFontColor: "#000",
+                    titleFontSize: 22,
+                    reversed: true,
+                },
+                axisY: {
+                    title: "得分",
+                    titleFontColor: "#000",
+                    titleFontSize: 22,
+
+                    includeZero: true,
+                    //labelFormatter: this.addSymbols
+                },
+                toolTip: {
+                    shared: true,
+                    fontSize: 20,
+                    fontColor: "red",
+                    background: "#f4d5a6",
+                    contentFormatter: function (e) {
+                        var content = " ";
+                        var li = " ";
+                        for (var i = 0; i < e.entries.length; i++) {
+                            var li = " ";
+                            for (var k = 0; k < rank.length; k++) {
+                                if ((rank[k].num - 1) == e.entries[i].dataPoint.x) {
+
+
+                                    li = '工号:' + rank[k].userid +
+                                        ' 姓名:' + rank[k].name + ' 总分:' + rank[k].sum_eval + ''
+                                }
+                            }
+                        }
+                        content = li;
+                        return content;
+                    }
+
+
+                },
+
+                data: [
+                    {
+                        type: "line", //change it to column, spline, line, pie, etc
+                        toolTipContent: null,
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+            /*添加数据*/
+            var rank = workerrank();
+
+            for (var i = 0; i < rank.length; i++) {
+                if (rank[i].userid == getworker().userid) {
+                    /* 判断是否是当前账号的信息 */
+                    /* 如果是，则将信息复制到下列的显示框中 */
+                    option2.data[0].dataPoints.push({ label: rank[i].name, y: parseFloat(rank[i].sum_eval), markerType: "circle", markerColor: "red", markerSize: 18 });
+                    document.getElementById("chartContainer2ID").innerText = rank[i].userid;
+                    document.getElementById("chartContainer2name").innerText = rank[i].name;
+                    document.getElementById("chartContainer2score").innerText = rank[i].sum_eval;
+                    if (i < rank.legend * 0.3) {
+                        document.getElementById("chartContainer2ranking").innerText = i + 1;
+                        document.getElementById("chartContainer2worm").innerText = "您现在位于总排行的前30%，排名较高，继续保持哦！";
+                        document.getElementById("chartContainer2worm").style.color = "blue";
+                    } else if (i > rank.legend * 0.3 && i < rank.legend * 0.6) {
+                        document.getElementById("chartContainer2ranking").innerText = i + 1;
+                        document.getElementById("chartContainer2worm").innerText = "您现在位于总排行的30%与60%之间，继续保持哦！";
+                        document.getElementById("chartContainer2worm").style.color = "yellow";
+                    } else {
+                        document.getElementById("chartContainer2ranking").innerText = i + 1;
+                        document.getElementById("chartContainer2worm").innerText = "您现在位于总排行的60%以外，需要加油呀！";
+                        document.getElementById("chartContainer2worm").style.color = "red";
+                    }
+
+                }
+                else
+                    option2.data[0].dataPoints.push({ label: rank[i].name, y: parseFloat(rank[i].sum_eval) });
+            }
+
+            $("#chartContainer2").CanvasJSChart(option2);
+
+            /*师傅维修单数 和平均时间图表*/
+            var option3 = {
+                animationEnabled: true,
+                width: 850,
+                height: 400,
+                backgroundColor: "aliceblue",
+                theme: "light2",
+
+                zoomEnabled: true,
+                title: {
+                    text: "维修单数和平均时间"
+                },
+                axisX: {
+                    title: "账号",
+                    titleFontColor: "#000",
+                    titleFontSize: 22,
+                    reversed: true,
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                axisY: {
+                    title: "数量/次",
+                    titleFontColor: "#000",
+                    titleFontSize: 22,
+
+                    includeZero: true,
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                toolTip: {
+                    shared: true,
+                    fontSize: 20,
+                    fontColor: "red",
+                    background: "#f4d5a6",
+
+
+
+                },
+
+                data: [
+                    {
+                        type: "line", //change it to column, spline, line, pie, etc
+
+                        showInLegend: true,
+                        name: "数量",
+                        markerType: "square",
+                        dataPoints: [
+
+                        ]
+                    },
+                    {
+                        type: "line", //change it to column, spline, line, pie, etc
+
+                        showInLegend: true,
+                        name: "平均用时/h",
+                        lineDashType: "dash",
+                        dataPoints: [
+
+                        ]
+                    }
+                ]
+            };
+            /*添加数据*/
+            var rank2 = worker_num();
+            var sumtime = 0;
+            var sumnum = 0;
+            var evalsumtime = 0;
+            var evalsumnum = 0;
+
+            for (var i = 0; i < rank2.length; i++) {
+                sumtime += rank2[i].tm;
+                sumnum += rank[i].num;
+                if (i == rank2.length - 1) {
+                    evalsumnum = sumnum / i;
+                    evalsumtime = sumtime / i;
+                }
+
+            }
+
+            for (var i = 0; i < rank2.length; i++) {
+
+                if (rank2[i].workerid == getworker().userid) {
+                    option3.data[0].dataPoints.push({ label: rank2[i].workerid, y: parseFloat(rank2[i].num), markerType: "circle", markerColor: "red", markerSize: 16 });
+                    document.getElementById("chartContainer3num").innerText = rank2[i].num;
+                    document.getElementById("chartContainer3ID").innerText = rank2[i].workerid;
+                    document.getElementById("chartContainer3time").innerText = rank2[i].tm;
+
+                    if (rank2[i].num > evalsumnum && rank2[i].tm < evalsumtime) {
+                        document.getElementById("chartContainer3worm").innerText = "您的维修数量已超过平均维修数量，且维修平均时长低于平均时长。" + "\n" + "处于优秀水平，请继续保持！";
+                        document.getElementById("chartContainer3worm").style.color = "green";
+                    } else if (rank2[i].num > evalsumnum && rank2[i].tm > evalsumtime) {
+                        document.getElementById("chartContainer3worm").innerText = "您的维修数量已超过平均维修数量，但维修平均时长高于平均时长。" + "\n" + "处于良好水平，请继续保持！";
+                        document.getElementById("chartContainer3worm").style.color = "blue";
+                    } else if (rank2[i].num < evalsumnum && rank2[i].tm < evalsumtime) {
+                        document.getElementById("chartContainer3worm").innerText = "您的维修平均时长低于平均时长，但维修数量却低于平均维修数量。" + "\n" + "处于良好水平，请继续保持！";
+                        document.getElementById("chartContainer3worm").style.color = "yellow";
+                    } else if (rank2[i].num > evalsumnum && rank2[i].tm > evalsumtime) {
+                        document.getElementById("chartContainer3worm").innerText = "您的维修数量远低于平均维修数量，且维修平均时长也高于平均时长。" + "\n" + "处于较差水平，请继续努力！";
+                        document.getElementById("chartContainer3worm").style.color = "red";
+                    }
+                }
+                else
+                    option3.data[0].dataPoints.push({ label: rank2[i].workerid, y: parseFloat(rank2[i].num) });
+            }
+            for (var i = 0; i < rank2.length; i++) {
+                if (rank2[i].workerid == getworker().userid)
+                    option3.data[1].dataPoints.push({ label: rank2[i].workerid, y: parseFloat(rank2[i].tm), markerType: "square", markerColor: "blue", markerSize: 16 });
+                else
+
+                    option3.data[1].dataPoints.push({ label: rank2[i].workerid, y: parseFloat(rank2[i].tm) });
+            }
+
+            $("#chartContainer3").CanvasJSChart(option3);
+
+
+
+        });
+
+        function showdiv(num) {
+            for (var i = 0; i <= 3; i++) {
+                if (num == i) {
+                    document.getElementById("div" + i).style.display = "block";
+                    document.getElementById("chartContainer" + i).style.display = "block";
+                    document.getElementById("a" + i).classList = "bntup";
+                }
+                else {
+                    document.getElementById("div" + i).style.display = "none";
+                    document.getElementById("chartContainer" + i).style.display = "none";
+                    document.getElementById("a" + i).classList = "bntdown";
+                }
+            }
+        }
+    </script>
+    <style>
+        .a {
+            font-weight: border;
+            font-size: 15px;
+            /*  CCCCFF*/
+            background-color: #CCCCFF;
+            border-radius: 15px;
+            text-decoration: none;
+        }
+
+        .div {
+            width: 90%;
+            height: 500px;
+            border-radius: 20%;
+        }
+
+        .bntup {
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: inline-block;
+            padding: 10px 32px;
+            border-radius: 50px;
+            transition: 0.5s;
+            margin: 0 20px 20px 0;
+            background-color: #4a8bfe;
+            color: aliceblue;
+            text-decoration: none;
+        }
+
+        .bntdown {
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: inline-block;
+            padding: 10px 32px;
+            border-radius: 50px;
+            transition: 0.5s;
+            margin: 0 20px 20px 0;
+            border: #4a8bfe 2px solid;
+            color: #4a8bfe;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+    <center>
+        <a id="a0" class="bntup" href="javascript:showdiv(0)">各小区维修数量</a>
+        <a id="a1" class="bntdown" href="javascript:showdiv(1)">各设备维修数量</a>
+        <a id="a2" class="bntdown" href="javascript:showdiv(2)">师傅评分情况</a>
+        <a id="a3" class="bntdown" href="javascript:showdiv(3)">师傅单数与平均用时</a>
+
+    </center><br><br>
+
+    <div id="div0" style="display: block;">
+        <div id="chartContainer0" style="display: block;"></div>
+        <div id="workername" style="float: left;margin-top: 420px;">
+
+            <p style="font-size: 20px;font-weight: bolder;">地区提示：</p>
+            <strong>维修数量最多的地区：</strong><span id="chartContainer0max"></span>&nbsp;&nbsp;&nbsp;<br><br>
+            <strong>维修数量最少的地区：</strong><span id="chartContainer0min"></span>&nbsp;&nbsp;&nbsp;<br><br>
+        </div>
+    </div>
+
+    <div id="div1" style="display: none;">
+        <div id="chartContainer1" style="display: none;"></div>
+        <div id="workername" style="float: left;margin-top: 420px;">
+
+            <p style="font-size: 20px;font-weight: bolder;">维修数量预警：</p>
+            <strong>维修数量最多的设备：</strong><span id="chartContainer1maxnum"></span>&nbsp;&nbsp;&nbsp;<br><br>
+            <strong>维修数量最少的设备：</strong><span id="chartContainer1minnum"></span>&nbsp;&nbsp;&nbsp;<br><br>
+
+        </div>
+    </div>
+
+    <div id="div2" style="display: none;">
+        <div id="chartContainer2" style="display: none;"></div>
+        <div id="workername" style="float: left;margin-top: 420px;">
+            <p style="font-size: 20px;font-weight: bolder;">个人信息：</p>
+            <strong>工号：</strong><span id="chartContainer2ID"></span>&nbsp;&nbsp;&nbsp;
+            <strong>姓名：</strong><span id="chartContainer2name"></span>&nbsp;&nbsp;&nbsp;
+            <strong>评分：</strong><span id="chartContainer2score"></span>&nbsp;&nbsp;&nbsp;
+            <strong>排名：</strong><span id="chartContainer2ranking"></span>&nbsp;&nbsp;&nbsp;
+
+            （按高到低排序）
+            <p style="font-size: 20px;font-weight: bolder;">温馨提示：</p>
+            <span id="chartContainer2worm" style="font-size: 20px;"></span>&nbsp;&nbsp;&nbsp;<br><br>
+
+
+        </div>
+
+
+    </div>
+
+    <div id="div3" style="display: none;">
+        <div id="chartContainer3" style="display: none;"></div>
+
+        <div style="float: left;margin-top: 420px;">
+            <p style="font-size: 20px;font-weight: bolder;">个人信息：</p>
+            <strong>工号：</strong><span id="chartContainer3ID"></span>&nbsp;&nbsp;&nbsp;
+            <strong>维修数量：</strong><span id="chartContainer3num"></span>&nbsp;&nbsp;&nbsp;
+            <strong>平均用时：</strong><span id="chartContainer3time"></span>&nbsp;&nbsp;&nbsp;
+
+            <p style="font-size: 20px;font-weight: bolder;">温馨提示：</p>
+            <span id="chartContainer3worm" style="font-size: 20px;"></span>&nbsp;&nbsp;&nbsp;<br><br>
+        </div>
+
+    </div>
+
+
+
+
+
+
+</body>
+
+</html>
